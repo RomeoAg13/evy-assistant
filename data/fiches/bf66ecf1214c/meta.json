@@ -1,0 +1,14 @@
+{
+ "id": "bf66ecf1214c",
+ "filename": "Gouvernance et Sécurité de l'information.pdf",
+ "subject": "Gouvernance et securite de l information",
+ "title": "Gouvernance et sécurité de l'information (cours 1 et suite)",
+ "auto_title": true,
+ "added": 1791733005,
+ "chars": 81359,
+ "truncated": false,
+ "status": "ready",
+ "error": null,
+ "n_questions": 28,
+ "summary": "La fiche couvre le vocabulaire de la cybersécurité, les motivations des attaquants, les cibles et les quatre grands types d'attaque (virale, opportuniste, déni de service, APT). Elle traite aussi les acteurs et le cadre français et européen (ANSSI, DORA, NIS2), l'état de la menace, puis la détection, les outils et la gestion de crise avec l'inforensique."
+}

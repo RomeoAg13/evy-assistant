@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evy · Fiches</title>
+<style>
+  :root {
+    --bg: #07090d; --card: #10141c; --line: #1e2531; --ink: #e8edf5; --muted: #7b8698;
+    --accent: #4fd1c5; --accent-2: #7c9cff; --ok: #4fd18b; --warn: #f2c14e; --bad: #ff7a7a;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.5 "Inter", "Segoe UI", system-ui, sans-serif;
+         padding: 24px 16px 64px; }
+  main { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+  header h1 { font-size: 28px; font-weight: 600; }
+  header p { color: var(--muted); margin-top: 4px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+  label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; letter-spacing: .03em; }
+  input[type=text] { width: 100%; background: var(--bg); border: 1px solid var(--line); color: var(--ink);
+         border-radius: 10px; padding: 12px; font: inherit; }
+  input[type=text]:focus { outline: 2px solid var(--accent); border-color: transparent; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  @media (max-width: 560px) { .row { grid-template-columns: 1fr; } }
+  #drop { border: 2px dashed var(--line); border-radius: 12px; padding: 28px 16px; text-align: center;
+          color: var(--muted); cursor: pointer; transition: border-color .2s, background .2s; }
+  #drop.over, #drop:hover { border-color: var(--accent); background: rgba(79,209,197,.05); }
+  #drop strong { color: var(--ink); display: block; margin-bottom: 4px; }
+  #picked { margin-top: 10px; font-size: 14px; color: var(--accent); }
+  button { font: inherit; cursor: pointer; border-radius: 10px; border: 1px solid var(--line);
+           background: transparent; color: var(--ink); padding: 8px 12px; }
+  button:hover { border-color: var(--muted); }
+  #send { width: 100%; margin-top: 14px; padding: 13px; border: 0; font-weight: 600;
+          background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: #061015; }
+  #send:disabled { opacity: .45; cursor: default; }
+  #msg { margin-top: 12px; font-size: 14px; }
+  #msg .err { color: var(--bad); } #msg .ok { color: var(--ok); }
+  h2 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+  #list { display: flex; flex-direction: column; gap: 12px; }
+  .fiche { display: flex; flex-direction: column; gap: 10px; }
+  .fiche-top { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+  .fiche-title { font-weight: 600; font-size: 17px; }
+  .fiche-sub { color: var(--muted); font-size: 13px; }
+  .badge { font-size: 12px; padding: 3px 9px; border-radius: 99px; white-space: nowrap; border: 1px solid; }
+  .badge.ready { color: var(--ok); border-color: rgba(79,209,139,.4); }
+  .badge.generating { color: var(--warn); border-color: rgba(242,193,78,.4); }
+  .badge.error { color: var(--bad); border-color: rgba(255,122,122,.4); }
+  .fiche-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .fiche-actions button { font-size: 13px; padding: 6px 10px; }
+  .fiche-actions .danger:hover { border-color: var(--bad); color: var(--bad); }
+  .say { font-size: 13px; color: var(--muted); }
+  .say b { color: var(--accent); font-weight: 500; }
+  .questions { display: none; border-top: 1px solid var(--line); padding-top: 10px; font-size: 14px; }
+  .questions.open { display: block; }
+  .questions ol { padding-left: 20px; display: flex; flex-direction: column; gap: 8px; }
+  .questions li span { color: var(--muted); display: block; }
+  .empty { color: var(--muted); text-align: center; padding: 24px; }
+  .err-text { color: var(--bad); font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Mes fiches</h1>
+    <p>Dépose tes cours : Evy en tire des questions pour te faire réviser à l'oral.</p>
+  </header>
+
+  <section class="card">
+    <div class="row">
+      <div>
+        <label for="subject">Matière</label>
+        <input id="subject" type="text" list="subjects" placeholder="ex. Deep learning">
+        <datalist id="subjects"></datalist>
+      </div>
+      <div>
+        <label for="title">Titre (facultatif, un seul fichier)</label>
+        <input id="title" type="text" placeholder="ex. Transformers">
+      </div>
+    </div>
+    <div id="drop">
+      <strong>Glisse tes fichiers ici, ou touche pour choisir</strong>
+      PDF, Word, PowerPoint, Markdown ou texte, 50 Mo max
+      <div id="picked"></div>
+    </div>
+    <input id="file" type="file" multiple accept=".pdf,.docx,.pptx,.md,.markdown,.txt" hidden>
+    <button id="send" disabled>Envoyer</button>
+    <div id="msg"></div>
+  </section>
+
+  <section>
+    <h2>Fiches déposées</h2>
+    <div id="list"><div class="empty">Chargement…</div></div>
+  </section>
+</main>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  let picked = [];
+  let pollTimer = null;
+
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  function setPicked(files) {
+    picked = [...files];
+    $("picked").textContent = picked.length ? picked.map((f) => f.name).join(", ") : "";
+    $("send").disabled = !picked.length;
+    $("title").disabled = picked.length > 1;
+  }
+
+  $("drop").addEventListener("click", () => $("file").click());
+  $("file").addEventListener("change", (e) => setPicked(e.target.files));
+  ["dragenter", "dragover"].forEach((ev) => $("drop").addEventListener(ev, (e) => { e.preventDefault(); $("drop").classList.add("over"); }));
+  ["dragleave", "drop"].forEach((ev) => $("drop").addEventListener(ev, (e) => { e.preventDefault(); $("drop").classList.remove("over"); }));
+  $("drop").addEventListener("drop", (e) => setPicked(e.dataTransfer.files));
+
+  $("send").addEventListener("click", async () => {
+    const fd = new FormData();
+    picked.forEach((f) => fd.append("files", f));
+    fd.append("subject", $("subject").value);
+    fd.append("title", $("title").value);
+    $("send").disabled = true;
+    $("send").textContent = "Envoi en cours…";
+    $("msg").innerHTML = "";
+    try {
+      const r = await fetch("/fiches/api/upload", { method: "POST", body: fd });
+      const results = await r.json();
+      $("msg").innerHTML = results.map((x) => x.ok
+        ? `<div class="ok">✓ ${esc(x.title)} : questions en préparation (1 à 2 minutes)</div>`
+        : `<div class="err">✗ ${esc(x.filename)} : ${esc(x.error)}</div>`).join("");
+      setPicked([]);
+      $("file").value = "";
+      $("title").value = "";
+    } catch (e) {
+      $("msg").innerHTML = `<div class="err">Envoi impossible : ${esc(e.message)}</div>`;
+    }
+    $("send").textContent = "Envoyer";
+    $("send").disabled = !picked.length;
+    load();
+  });
+
+  function badge(f) {
+    if (f.status === "ready") return `<span class="badge ready">${f.n_questions} questions</span>`;
+    if (f.status === "generating") return `<span class="badge generating">Questions en préparation…</span>`;
+    return `<span class="badge error">Erreur</span>`;
+  }
+
+  async function load() {
+    let list = [];
+    try { list = await (await fetch("/fiches/api/list")).json(); } catch (_) { return; }
+    $("subjects").innerHTML = [...new Set(list.map((f) => f.subject).filter(Boolean))]
+      .map((s) => `<option value="${esc(s)}">`).join("");
+    $("list").innerHTML = list.length ? list.map((f) => `
+      <article class="card fiche" data-id="${f.id}">
+        <div class="fiche-top">
+          <div>
+            <div class="fiche-title">${esc(f.title)}</div>
+            <div class="fiche-sub">${esc(f.subject || "Sans matière")} · ${esc(f.filename)}${f.truncated ? " · fiche très longue, seul le début est utilisé" : ""}</div>
+          </div>
+          ${badge(f)}
+        </div>
+        ${f.status === "error" ? `<div class="err-text">${esc(f.error)}</div>` : ""}
+        ${f.status === "ready" ? `<div class="say">Dis : <b>« Alexa, demande à Evy de m'interroger sur ${esc(f.title)} »</b>${f.answers ? ` · ${f.answers} réponses, ${f.success} % de réussite` : ""}</div>` : ""}
+        <div class="fiche-actions">
+          ${f.status === "ready" ? `<button data-act="questions">Voir les questions</button>` : ""}
+          ${f.status !== "generating" ? `<button data-act="regenerate">Régénérer les questions</button>` : ""}
+          <button data-act="delete" class="danger">Supprimer</button>
+        </div>
+        <div class="questions"></div>
+      </article>`).join("") : `<div class="empty">Aucune fiche pour l'instant.</div>`;
+    clearTimeout(pollTimer);
+    if (list.some((f) => f.status === "generating")) pollTimer = setTimeout(load, 5000);
+  }
+
+  $("list").addEventListener("click", async (e) => {
+    const btn = e.target.closest("button[data-act]");
+    if (!btn) return;
+    const card = btn.closest(".fiche");
+    const id = card.dataset.id;
+    const act = btn.dataset.act;
+    if (act === "delete") {
+      if (!confirm("Supprimer cette fiche et ses statistiques ?")) return;
+      await fetch(`/fiches/api/${id}/delete`, { method: "POST" });
+      load();
+    } else if (act === "regenerate") {
+      await fetch(`/fiches/api/${id}/regenerate`, { method: "POST" });
+      load();
+    } else if (act === "questions") {
+      const box = card.querySelector(".questions");
+      if (box.classList.toggle("open") && !box.innerHTML) {
+        const qs = await (await fetch(`/fiches/api/${id}/questions`)).json();
+        box.innerHTML = `<ol>${qs.map((q) => `<li>${esc(q.q_ecran || q.q)}<span>${esc(q.reponse)}</span></li>`).join("")}</ol>`;
+      }
+    }
+  });
+
+  load();
+</script>
+</body>
+</html>

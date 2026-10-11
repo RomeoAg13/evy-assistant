@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Convolution : d'où vient le 3 ?</title>
+<style>
+html,body{margin:0;background:#0b0f17;overflow:hidden}
+svg{display:block;width:100vw;height:100vh}
+text{font-family:system-ui,Segoe UI,Arial,sans-serif;font-weight:700;fill:#fff}
+.n{font-size:40px;text-anchor:middle}
+.lab{font-size:32px;text-anchor:middle}
+.op{font-size:56px;text-anchor:middle;fill:#94a3b8}
+.t{font-size:30px}
+.y{fill:#facc15}.g{fill:#4ade80}.b{fill:#60a5fa}.o{fill:#fbbf24}
+.hl{fill:none;stroke:#facc15;stroke-width:6}
+[data-s]{transition:opacity .5s}
+#win{transition:transform .4s}
+</style></head><body>
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+<defs><pattern id="g" width="80" height="80" y="40" patternUnits="userSpaceOnUse"><rect width="80" height="80" fill="none" stroke="#0b0f17" stroke-width="6"/></pattern></defs>
+
+<text x="80" y="85" style="font-size:52px">Convolution : sortie = somme de 9 produits (pixel × poids)</text>
+
+<!-- Étiquettes -->
+<text class="lab b" x="320" y="170">Image 6×6</text>
+<text class="lab o" x="760" y="170">Filtre 3×3 (poids)</text>
+<text class="lab" x="1160" y="170" data-s="2 3 4">Produits 3×3</text>
+<text class="lab g" x="1600" y="170">Sortie 4×4</text>
+
+<!-- Image : gauche claire (1), droite sombre (0) -->
+<rect x="80" y="200" width="240" height="480" fill="#3b82f6"/>
+<rect x="320" y="200" width="240" height="480" fill="#172033"/>
+<rect x="80" y="200" width="480" height="480" fill="url(#g)"/>
+<g class="n">
+<text x="120 200 280 360 440 520" y="255">111000</text><text x="120 200 280 360 440 520" y="335">111000</text>
+<text x="120 200 280 360 440 520" y="415">111000</text><text x="120 200 280 360 440 520" y="495">111000</text>
+<text x="120 200 280 360 440 520" y="575">111000</text><text x="120 200 280 360 440 520" y="655">111000</text></g>
+
+<!-- Filtre -->
+<rect x="640" y="200" width="240" height="240" fill="#f59e0b"/>
+<rect x="640" y="200" width="240" height="240" fill="url(#g)"/>
+<g class="n" style="fill:#0b0f17">
+<text style="fill:#0b0f17" x="680 760 826 856" y="255">10−1</text><text style="fill:#0b0f17" x="680 760 826 856" y="335">10−1</text><text style="fill:#0b0f17" x="680 760 826 856" y="415">10−1</text></g>
+
+<!-- Fenêtre jaune -->
+<rect id="win" class="hl" data-s="1 2 3 4 5" x="163" y="203" width="234" height="234"/>
+
+<!-- Produits -->
+<g data-s="2 3 4">
+<text class="op" x="600" y="352">×</text><text class="op" x="960" y="352">=</text>
+<rect x="1040" y="200" width="240" height="240" fill="#1f2937"/>
+<rect x="1040" y="200" width="240" height="240" fill="url(#g)"/>
+<g class="n"><text x="1080 1160 1240" y="255">100</text><text x="1080 1160 1240" y="335">100</text><text x="1080 1160 1240" y="415">100</text></g></g>
+
+<!-- Zoom sur 0 × (−1) -->
+<g data-s="2">
+<rect class="hl" x="323" y="203" width="74" height="74"/><rect class="hl" x="803" y="203" width="74" height="74"/><rect class="hl" x="1203" y="203" width="74" height="74"/>
+<text class="y" x="640" y="525" style="font-size:44px">0 × (−1) = 0</text>
+<text class="t" x="640" y="575">1 seul produit sur 9</text>
+<text class="t" x="640" y="620">le 3 vient de la somme</text></g>
+
+<!-- Somme -->
+<g data-s="3 4">
+<text class="op y" x="1360" y="352">Σ →</text>
+<rect x="1040" y="470" width="360" height="220" rx="14" fill="#111827" stroke="#475569" stroke-width="3"/>
+<text class="t" x="1065" y="515">ligne 1 : 1+0+0 = 1</text><text class="t" x="1065" y="560">ligne 2 : 1+0+0 = 1</text><text class="t" x="1065" y="605">ligne 3 : 1+0+0 = 1</text>
+<text class="g" x="1065" y="665" style="font-size:44px">Total = 3</text></g>
+
+<!-- Sortie : 0 3 3 0 -->
+<rect x="1440" y="200" width="320" height="320" fill="#1b3a2a"/>
+<rect x="1520" y="200" width="160" height="320" fill="#15803d"/>
+<rect x="1440" y="200" width="320" height="320" fill="url(#g)"/>
+<g class="n">
+<text data-s="4 5 6" x="1560" y="255">3</text>
+<text data-s="5 6" x="1480 1640 1720" y="255">030</text>
+<text data-s="5 6" x="1480 1560 1640 1720" y="335">0330</text><text data-s="5 6" x="1480 1560 1640 1720" y="415">0330</text><text data-s="5 6" x="1480 1560 1640 1720" y="495">0330</text></g>
+<rect data-s="4" class="hl" x="1523" y="203" width="74" height="74"/>
+<rect id="cov" x="1440" y="195" width="0" height="330" fill="#0b0f17"/>
+
+<!-- Signe -->
+<g data-s="6">
+<text class="t" x="80" y="772" style="font-size:32px">Clair → sombre : 1·1 + 1·0 + 0·(−1) = +1 par ligne → <tspan class="g">+3</tspan></text>
+<text class="t" x="80" y="822" style="font-size:32px">Sombre → clair : 0·1 + 0·0 + 1·(−1) = −1 par ligne → <tspan class="g">−3</tspan></text></g>
+
+<!-- Légende -->
+<rect x="80" y="855" width="1760" height="62" rx="12" fill="#1e293b"/>
+<text id="cap" class="y" x="110" y="900" style="font-size:36px">Chaque pixel de sortie = Σ (pixel × poids) sur une fenêtre 3×3</text>
+
+<!-- À retenir -->
+<rect x="80" y="935" width="1760" height="120" rx="16" fill="#111827" stroke="#facc15" stroke-width="4"/>
+<text class="t" x="110" y="982" style="font-size:32px"><tspan class="y">À retenir : </tspan>la sortie est une SOMME de 9 produits pixel × poids ;</text>
+<text class="t" x="110" y="1030" style="font-size:32px">son signe donne le sens du bord (+3 clair→sombre, −3 sombre→clair).</text>
+</svg>
+<script>
+try{
+const caps=["① On pose le filtre sur une fenêtre 3×3 de l'image","② On multiplie case par case : pixel × poids (9 produits)","③ On additionne les 9 produits : 1 + 1 + 1 = 3","④ Ce total est UN seul pixel de la sortie","⑤ On glisse la fenêtre d'un pixel : 6×6 → 4×4","⑥ Bord inversé : mêmes calculs, signe opposé → −3"];
+const $=id=>document.getElementById(id),els=[...document.querySelectorAll('[data-s]')],win=$('win'),cov=$('cov'),cap=$('cap');
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function slide(p){win.style.transform='translateX('+80*(p-1)+'px)';cov.setAttribute('x',1440+80*(p+1));cov.setAttribute('width',320-80*(p+1));}
+function show(n){
+  els.forEach(e=>e.style.opacity=(n==0||e.dataset.s.split(' ').includes(String(n)))?1:.15);
+  cap.textContent=n?caps[n-1]:"Chaque pixel de sortie = Σ (pixel × poids) sur une fenêtre 3×3";
+  if(n!=5){win.style.transform='none';cov.setAttribute('width',0);}
+}
+(async()=>{for(;;){
+  for(let n=1;n<=6;n++){show(n);
+    if(n==5){for(let p=0;p<4;p++){slide(p);await wait(1000);}}else await wait(4000);}
+  show(0);await wait(5000);
+}})();
+}catch(e){}
+</script>
+</body></html>

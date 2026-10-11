@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Comment fonctionne un CNN</title>
+<style>
+  html,body{margin:0;height:100%;background:#0b0f17;overflow:hidden}
+  svg{width:100vw;height:100vh;display:block}
+  text{font-family:"Segoe UI",Helvetica,Arial,sans-serif;fill:#e5edff}
+  .s{transition:opacity .5s}
+  .pos{fill:#4ade80;font-weight:700}
+  .ng{fill:#9ca3af;font-weight:700}
+  .bd circle{fill:currentColor;stroke:currentColor;stroke-width:4}
+  .bd text{fill:#0b0f17;font-weight:800;font-size:30px}
+  .bd.off circle{fill:#0b0f17}
+  .bd.off text{fill:currentColor}
+  .lab{font-size:32px;font-weight:600}
+</style>
+</head>
+<body>
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="gr" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M60 0H0V60" fill="none" stroke="#94a3b8" stroke-opacity=".4" stroke-width="2"/>
+    </pattern>
+    <marker id="ah" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto">
+      <path d="M0 0L6 3L0 6z" fill="#cbd5e1"/>
+    </marker>
+    <!-- lignes réutilisées -->
+    <text id="rI" x="30 90 150 210 270 330" y="42" text-anchor="middle" font-size="34" font-weight="700">001100</text>
+    <text id="rF" y="42" text-anchor="middle" font-size="34" font-weight="700" style="fill:#ffb454">
+      <tspan x="30">−1</tspan><tspan x="90">0</tspan><tspan x="150">1</tspan></text>
+    <text id="rM" y="42" text-anchor="middle" font-size="34">
+      <tspan x="30" class="pos">3</tspan><tspan x="90" class="pos">3</tspan><tspan x="150" class="ng">−3</tspan><tspan x="210" class="ng">−3</tspan></text>
+  </defs>
+
+  <rect width="1920" height="1080" fill="#0b0f17"/>
+  <text x="60" y="100" font-size="56" font-weight="800">CNN : un filtre glisse sur l'image et repère un motif</text>
+
+  <!-- ① IMAGE -->
+  <g id="g1" class="s">
+    <g transform="translate(70,170)">
+      <rect width="360" height="360" fill="#121a2b"/>
+      <rect x="120" width="120" height="360" fill="#2563eb"/>
+      <use href="#rI" y="0"/><use href="#rI" y="60"/><use href="#rI" y="120"/>
+      <use href="#rI" y="180"/><use href="#rI" y="240"/><use href="#rI" y="300"/>
+      <rect width="360" height="360" fill="url(#gr)" stroke="#94a3b8" stroke-opacity=".5" stroke-width="2"/>
+    </g>
+    <g class="bd" id="b1" style="color:#3b82f6" transform="translate(250,580)"><circle r="24"/><text text-anchor="middle" y="11">1</text></g>
+    <text class="lab" x="250" y="652" text-anchor="middle" style="fill:#7fb0ff">Image 6×6</text>
+  </g>
+
+  <text x="465" y="372" font-size="64" text-anchor="middle" style="fill:#cbd5e1">∗</text>
+
+  <!-- ② FILTRE + fenêtre glissante -->
+  <g id="g2" class="s">
+    <g transform="translate(500,260)">
+      <rect width="180" height="180" fill="#4a2c07"/>
+      <use href="#rF" y="0"/><use href="#rF" y="60"/><use href="#rF" y="120"/>
+      <rect width="180" height="180" fill="url(#gr)" stroke="#f59e0b" stroke-width="4"/>
+    </g>
+    <g transform="translate(70,170)">
+      <rect id="win" width="180" height="180" fill="#f59e0b" fill-opacity=".15" stroke="#f59e0b" stroke-width="6"/>
+    </g>
+    <g class="bd" id="b2" style="color:#f59e0b" transform="translate(590,580)"><circle r="24"/><text text-anchor="middle" y="11">2</text></g>
+    <text class="lab" x="590" y="652" text-anchor="middle" style="fill:#ffb454">Filtre 3×3</text>
+  </g>
+
+  <text x="710" y="372" font-size="64" text-anchor="middle" style="fill:#cbd5e1">=</text>
+
+  <!-- ③ CARTE DE CARACTÉRISTIQUES -->
+  <g id="g3" class="s">
+    <g transform="translate(740,230)">
+      <rect width="240" height="240" fill="#1f2937"/>
+      <rect width="120" height="240" fill="#14532d"/>
+      <use href="#rM" y="0"/><use href="#rM" y="60"/><use href="#rM" y="120"/><use href="#rM" y="180"/>
+      <rect width="240" height="240" fill="url(#gr)" stroke="#94a3b8" stroke-opacity=".5" stroke-width="2"/>
+      <g id="cov"></g>
+      <rect id="out" width="60" height="60" fill="none" stroke="#4ade80" stroke-width="6"/>
+    </g>
+    <g class="bd" id="b3" style="color:#4ade80" transform="translate(860,580)"><circle r="24"/><text text-anchor="middle" y="11">3</text></g>
+    <text class="lab" x="860" y="652" text-anchor="middle" style="fill:#4ade80">Carte 4×4</text>
+  </g>
+
+  <!-- ④ RELU + POOLING -->
+  <g id="g4" class="s">
+    <text x="1070" y="318" font-size="28" font-weight="700" text-anchor="middle" style="fill:#cbd5e1">ReLU + max</text>
+    <path d="M1000 350H1138" stroke="#cbd5e1" stroke-width="10" marker-end="url(#ah)"/>
+    <g transform="translate(1160,290)">
+      <rect width="120" height="120" fill="#1f2937"/>
+      <rect width="60" height="120" fill="#14532d"/>
+      <text y="42" text-anchor="middle" font-size="34"><tspan x="30" class="pos">3</tspan><tspan x="90" class="ng">0</tspan></text>
+      <text y="102" text-anchor="middle" font-size="34"><tspan x="30" class="pos">3</tspan><tspan x="90" class="ng">0</tspan></text>
+      <rect width="120" height="120" fill="url(#gr)" stroke="#4ade80" stroke-width="4"/>
+    </g>
+    <g class="bd" id="b4" style="color:#4ade80" transform="translate(1220,580)"><circle r="24"/><text text-anchor="middle" y="11">4</text></g>
+    <text class="lab" x="1220" y="652" text-anchor="middle" style="fill:#4ade80">Pooling 2×2</text>
+  </g>
+
+  <!-- ⑤ COUCHES SUIVANTES -->
+  <g id="g5" class="s">
+    <path d="M1292 350H1368" stroke="#cbd5e1" stroke-width="10" marker-end="url(#ah)"/>
+    <g transform="translate(1380,0)">
+      <rect y="180" width="480" height="90" rx="16" fill="#1c1409" stroke="#f59e0b" stroke-width="4"/>
+      <text x="240" y="238" font-size="32" font-weight="600" text-anchor="middle" style="fill:#ffb454">Conv + ReLU + Pool ×N</text>
+      <path d="M240 276V304" stroke="#cbd5e1" stroke-width="8" marker-end="url(#ah)"/>
+      <rect y="310" width="480" height="90" rx="16" fill="#1c1409" stroke="#f59e0b" stroke-width="4"/>
+      <text x="240" y="368" font-size="32" font-weight="600" text-anchor="middle" style="fill:#ffb454">Aplatir + couche dense</text>
+      <path d="M240 406V434" stroke="#cbd5e1" stroke-width="8" marker-end="url(#ah)"/>
+      <rect y="440" width="480" height="90" rx="16" fill="#0f2a1a" stroke="#4ade80" stroke-width="4"/>
+      <text x="240" y="498" font-size="34" font-weight="700" text-anchor="middle" style="fill:#4ade80">Classe : chat 92 %</text>
+    </g>
+    <g class="bd" id="b5" style="color:#4ade80" transform="translate(1620,580)"><circle r="24"/><text text-anchor="middle" y="11">5</text></g>
+    <text class="lab" x="1620" y="652" text-anchor="middle" style="fill:#4ade80">Classification</text>
+  </g>
+
+  <!-- FORMULE -->
+  <g id="gf" class="s">
+    <rect x="60" y="695" width="1800" height="85" rx="16" fill="#111827"/>
+    <text x="90" y="752" font-size="42" font-weight="700">
+      <tspan style="fill:#4ade80">sortie</tspan> = Σ <tspan style="fill:#7fb0ff">zone d'image</tspan> × <tspan style="fill:#ffb454">filtre</tspan></text>
+    <text x="1830" y="750" font-size="34" text-anchor="end">ex. : 3 × (<tspan style="fill:#7fb0ff">0</tspan>×<tspan style="fill:#ffb454">−1</tspan> + <tspan style="fill:#7fb0ff">0</tspan>×<tspan style="fill:#ffb454">0</tspan> + <tspan style="fill:#7fb0ff">1</tspan>×<tspan style="fill:#ffb454">1</tspan>) = <tspan style="fill:#4ade80" font-weight="700">3</tspan></text>
+  </g>
+
+  <!-- LÉGENDE ÉTAPE -->
+  <text id="cap" x="960" y="855" font-size="38" font-weight="600" text-anchor="middle">Un filtre 3×3 glisse sur l'image : une valeur par position.</text>
+
+  <!-- À RETENIR -->
+  <rect x="60" y="895" width="1800" height="150" rx="20" fill="#111827" stroke="#64748b" stroke-width="3"/>
+  <text x="100" y="985" font-size="42" font-weight="800" style="fill:#ffb454">À retenir</text>
+  <text x="380" y="953" font-size="34">Un CNN réutilise le même petit filtre partout : 9 poids seulement,</text>
+  <text x="380" y="1003" font-size="34">et un motif est repéré où qu'il soit dans l'image.</text>
+</svg>
+
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const G = ['g1','g2','g3','g4','g5','gf'];
+  const NS = 'http://www.w3.org/2000/svg';
+  const win = $('#win'), out = $('#out'), cov = $('#cov'), cap = $('#cap');
+  const negs = () => document.querySelectorAll('#rM .ng');
+
+  function show(on, focus, text){
+    G.forEach(g => $('#'+g).style.opacity = on.includes(g) ? 1 : 0.18);
+    for (let i = 1; i <= 5; i++) $('#b'+i).classList.toggle('off', focus && i !== focus);
+    cap.textContent = text;
+  }
+  function pos(k){
+    const t = `translate(${60*(k&3)},${60*(k>>2)})`;
+    win.setAttribute('transform', t);
+    out.setAttribute('transform', t);
+  }
+  function relu(on){ negs().forEach(t => t.textContent = on ? '0' : '−3'); }
+
+  async function loop(){
+    for(;;){
+      pos(0); relu(false); cov.innerHTML = '';
+      show(['g1'], 1, "Image d'entrée 6×6 : une barre claire (1) sur fond sombre (0).");
+      await sleep(4000);
+
+      for (let k = 0; k < 16; k++){
+        const r = document.createElementNS(NS,'rect');
+        r.setAttribute('x', 60*(k&3)); r.setAttribute('y', 60*(k>>2));
+        r.setAttribute('width', 60); r.setAttribute('height', 60);
+        r.setAttribute('fill', '#0b0f17'); r.id = 'c'+k;
+        cov.appendChild(r);
+      }
+      show(['g1','g2','g3'], 2, "Un filtre 3×3 appris glisse sur l'image, d'un pixel à la fois.");
+      for (let k = 0; k < 16; k++){
+        pos(k); const c = $('#c'+k); if (c) c.remove();
+        await sleep(250);
+      }
+
+      cov.innerHTML = ''; pos(0);
+      show(['g1','g2','g3','gf'], 3, "À chaque position : pixel × poids, puis somme → 1 valeur.");
+      await sleep(4000);
+
+      relu(true);
+      show(['g3','g4'], 4, "ReLU supprime les négatifs ; max 2×2 garde la réponse la plus forte.");
+      await sleep(4000);
+
+      show(['g4','g5'], 5, "Les couches suivantes combinent ces cartes : bords → formes → classe.");
+      await sleep(4000);
+
+      relu(false);
+      show(G, 0, "Résultat : les 3 marquent le bord gauche de la barre.");
+      await sleep(4000);
+    }
+  }
+  loop();
+})();
+</script>
+</body>
+</html>

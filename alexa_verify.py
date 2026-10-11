@@ -75,7 +75,7 @@ def verify_request(headers, raw_body: bytes, envelope: dict, skill_id: str | Non
             envelope.get("context", {}).get("System", {}).get("application", {}).get("applicationId")
             or envelope.get("session", {}).get("application", {}).get("applicationId")
         )
-        if app_id != skill_id:
+        if app_id not in [s.strip() for s in skill_id.split(",")]:
             raise VerificationError("applicationId inattendu")
 
     # 2. Horodatage (anti-rejeu)

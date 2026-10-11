@@ -3,3 +3,6 @@ python-dotenv>=1.0
 anthropic>=0.40
 cryptography>=43
 certifi
+pypdf>=4
+python-docx>=1.1
+python-pptx>=0.6.23

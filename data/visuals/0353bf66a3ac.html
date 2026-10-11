@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Comment fonctionne un Transformer</title>
+<style>
+  html,body{margin:0;background:#0b1020;width:1920px;height:1080px;overflow:hidden}
+  svg{display:block;width:1920px;height:1080px}
+  text{font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;fill:#eaf0ff;font-size:30px}
+  .dim{fill:#7fe3ff;font-size:28px}
+  .t{font-size:60px;font-weight:700}
+  .h{font-size:48px;font-weight:700;fill:#ffd166}
+  .f{font-size:44px;font-family:"Cambria Math","STIX Two Math",Georgia,serif}
+  .g{transition:opacity .6s,filter .6s}
+  .anim .g{opacity:.25}
+  .anim .g.on{opacity:1;filter:drop-shadow(0 0 14px #ffd166)}
+</style>
+</head>
+<body>
+<svg id="svg" viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#9fb0d8"/>
+    </marker>
+    <marker id="ar2" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/>
+    </marker>
+  </defs>
+
+  <text class="t" x="60" y="90">Transformer : le bloc décodeur</text>
+  <text x="1860" y="90" text-anchor="end" style="fill:#9fb0d8">« Attention Is All You Need »</text>
+
+  <!-- ================= COLONNE GAUCHE : pile ================= -->
+  <g stroke="#9fb0d8" stroke-width="3" fill="none" marker-end="url(#ar)">
+    <path d="M370 824 V790"/>
+    <path d="M370 724 V670"/>
+    <path d="M370 592 V582"/>
+    <path d="M370 528 V518"/>
+    <path d="M370 452 V442"/>
+    <path d="M370 388 V306"/>
+    <path d="M370 240 V222"/>
+  </g>
+
+  <!-- sortie -->
+  <g class="g" data-s="5">
+    <rect x="130" y="150" width="480" height="70" rx="14" fill="#2b6a4a" stroke="#6fe3a5" stroke-width="3"/>
+    <text x="370" y="196" text-anchor="middle">Softmax → token suivant</text>
+    <text class="dim" x="625" y="196">n×|V|</text>
+    <rect x="130" y="240" width="480" height="64" rx="14" fill="#2b6a4a" stroke="#6fe3a5" stroke-width="3"/>
+    <text x="370" y="283" text-anchor="middle">Linear  d → |V|</text>
+  </g>
+
+  <!-- bloc répété -->
+  <rect x="70" y="370" width="650" height="318" rx="22" fill="none" stroke="#5c6aa0" stroke-width="3" stroke-dasharray="14 10"/>
+  <text x="720" y="356" text-anchor="end" style="fill:#ffd166;font-weight:700">× N couches</text>
+
+  <g class="g" data-s="4">
+    <rect x="130" y="388" width="480" height="52" rx="12" fill="#3a3f66" stroke="#aab4ee" stroke-width="3"/>
+    <text x="370" y="424" text-anchor="middle">Add &amp; LayerNorm</text>
+    <text class="dim" x="625" y="424">n×d</text>
+    <rect x="130" y="452" width="480" height="64" rx="12" fill="#2b6a4a" stroke="#6fe3a5" stroke-width="3"/>
+    <text x="370" y="494" text-anchor="middle">FFN : d → 4d → d</text>
+    <text class="dim" x="625" y="494">n×d</text>
+    <rect x="130" y="528" width="480" height="52" rx="12" fill="#3a3f66" stroke="#aab4ee" stroke-width="3"/>
+    <text x="370" y="564" text-anchor="middle">Add &amp; LayerNorm</text>
+    <text class="dim" x="625" y="564">n×d</text>
+    <!-- connexions résiduelles -->
+    <path d="M130 484 H100 V414 H130" fill="none" stroke="#ffd166" stroke-width="4" marker-end="url(#ar2)"/>
+    <path d="M130 630 H100 V554 H130" fill="none" stroke="#ffd166" stroke-width="4" marker-end="url(#ar2)"/>
+  </g>
+  <g class="g" data-s="1">
+    <rect x="130" y="592" width="480" height="76" rx="12" fill="#8a4b12" stroke="#ff9f1c" stroke-width="3"/>
+    <text x="370" y="640" text-anchor="middle">Attention multi-têtes</text>
+    <text class="dim" x="625" y="640">n×d</text>
+  </g>
+
+  <g class="g" data-s="0">
+    <rect x="130" y="724" width="480" height="64" rx="14" fill="#5a3a8a" stroke="#c9a2ff" stroke-width="3"/>
+    <text x="370" y="766" text-anchor="middle">Embedding + position</text>
+    <text class="dim" x="625" y="766">n×d</text>
+    <rect x="130" y="824" width="480" height="64" rx="14" fill="#1d2a52" stroke="#7fa0ff" stroke-width="3"/>
+    <text x="370" y="866" text-anchor="middle">Le · chat · dort · …</text>
+    <text class="dim" x="625" y="866">n ids</text>
+  </g>
+
+  <!-- ================= COLONNE DROITE : zoom attention ================= -->
+  <rect x="800" y="130" width="1070" height="810" rx="24" fill="#10172e" stroke="#2c3865" stroke-width="3"/>
+  <text class="h" x="840" y="195">Zoom : self-attention causale</text>
+
+  <g class="g" data-s="1">
+    <rect x="840" y="250" width="100" height="290" rx="14" fill="#5a3a8a" stroke="#c9a2ff" stroke-width="3"/>
+    <text x="890" y="385" text-anchor="middle" style="font-size:40px;font-weight:700">X</text>
+    <text class="dim" x="890" y="425" text-anchor="middle">n×d</text>
+  </g>
+
+  <g stroke="#9fb0d8" stroke-width="3" fill="none" marker-end="url(#ar)">
+    <path d="M940 385 L1080 285"/>
+    <path d="M940 395 L1080 395"/>
+    <path d="M940 405 L1080 505"/>
+    <path d="M1350 285 L1500 340"/>
+    <path d="M1350 395 L1500 410"/>
+    <path d="M1350 505 L1500 495" stroke-dasharray="10 8"/>
+  </g>
+
+  <g class="g" data-s="1 2">
+    <rect x="1080" y="235" width="270" height="100" rx="14" fill="#8a4b12" stroke="#ff9f1c" stroke-width="3"/>
+    <text x="1215" y="278" text-anchor="middle">Q = X·W_Q</text>
+    <text class="dim" x="1215" y="318" text-anchor="middle">n×dₖ</text>
+  </g>
+  <g class="g" data-s="1 2">
+    <rect x="1080" y="345" width="270" height="100" rx="14" fill="#8a4b12" stroke="#ff9f1c" stroke-width="3"/>
+    <text x="1215" y="388" text-anchor="middle">K = X·W_K</text>
+    <text class="dim" x="1215" y="428" text-anchor="middle">n×dₖ</text>
+  </g>
+  <g class="g" data-s="1 3">
+    <rect x="1080" y="455" width="270" height="100" rx="14" fill="#8a4b12" stroke="#ff9f1c" stroke-width="3"/>
+    <text x="1215" y="498" text-anchor="middle">V = X·W_V</text>
+    <text class="dim" x="1215" y="538" text-anchor="middle">n×dₖ</text>
+  </g>
+
+  <!-- matrice d'attention 4x4 : x=1520..1840, y=260..580 -->
+  <g class="g" data-s="2 3">
+    <g text-anchor="middle" style="fill:#9fb0d8">
+      <text x="1560" y="248">Le</text><text x="1640" y="248">chat</text>
+      <text x="1720" y="248">dort</text><text x="1800" y="248">.</text>
+    </g>
+    <g stroke="#0b1020" stroke-width="4">
+      <!-- ligne 0 -->
+      <rect x="1520" y="260" width="80" height="80" fill="rgba(255,159,28,1)"/>
+      <rect x="1600" y="260" width="80" height="80" fill="#1a2040"/>
+      <rect x="1680" y="260" width="80" height="80" fill="#1a2040"/>
+      <rect x="1760" y="260" width="80" height="80" fill="#1a2040"/>
+      <!-- ligne 1 -->
+      <rect x="1520" y="340" width="80" height="80" fill="rgba(255,159,28,.35)"/>
+      <rect x="1600" y="340" width="80" height="80" fill="rgba(255,159,28,.8)"/>
+      <rect x="1680" y="340" width="80" height="80" fill="#1a2040"/>
+      <rect x="1760" y="340" width="80" height="80" fill="#1a2040"/>
+      <!-- ligne 2 -->
+      <rect x="1520" y="420" width="80" height="80" fill="rgba(255,159,28,.2)"/>
+      <rect x="1600" y="420" width="80" height="80" fill="rgba(255,159,28,.7)"/>
+      <rect x="1680" y="420" width="80" height="80" fill="rgba(255,159,28,.4)"/>
+      <rect x="1760" y="420" width="80" height="80" fill="#1a2040"/>
+      <!-- ligne 3 -->
+      <rect x="1520" y="500" width="80" height="80" fill="rgba(255,159,28,.2)"/>
+      <rect x="1600" y="500" width="80" height="80" fill="rgba(255,159,28,.3)"/>
+      <rect x="1680" y="500" width="80" height="80" fill="rgba(255,159,28,.3)"/>
+      <rect x="1760" y="500" width="80" height="80" fill="rgba(255,159,28,.6)"/>
+    </g>
+    <g text-anchor="middle" style="font-size:28px">
+      <text x="1560" y="310">1.0</text>
+      <text x="1560" y="390">.3</text><text x="1640" y="390">.7</text>
+      <text x="1560" y="470">.1</text><text x="1640" y="470">.6</text><text x="1720" y="470">.3</text>
+      <text x="1560" y="550">.1</text><text x="1640" y="550">.2</text><text x="1720" y="550">.2</text><text x="1800" y="550">.5</text>
+      <g style="fill:#5c6aa0;font-size:26px">
+        <text x="1640" y="310">−∞</text><text x="1720" y="310">−∞</text><text x="1800" y="310">−∞</text>
+        <text x="1720" y="390">−∞</text><text x="1800" y="390">−∞</text>
+        <text x="1800" y="470">−∞</text>
+      </g>
+    </g>
+    <text class="dim" x="1680" y="624" text-anchor="middle">n×n · lignes = Σ 1</text>
+  </g>
+
+  <g class="g" data-s="2 3">
+    <text class="f" x="840" y="720">Attention(Q,K,V) = softmax( QKᵀ / √dₖ ) · V</text>
+  </g>
+  <g class="g" data-s="3">
+    <text x="840" y="790">Chaque token = moyenne pondérée des V (n×dₖ)</text>
+    <text x="840" y="850">Multi-têtes : h têtes en parallèle, dₖ = d/h</text>
+    <text x="840" y="910">Concat → W_O → sortie n×d</text>
+  </g>
+
+  <!-- légende -->
+  <rect x="60" y="955" width="1800" height="95" rx="18" fill="#1a2348" stroke="#ffd166" stroke-width="3"/>
+  <text id="cap" x="960" y="1016" text-anchor="middle" style="font-size:36px">Un bloc : attention → FFN, empilé N fois, résiduels autour de chaque sous-couche</text>
+</svg>
+
+<script>
+(function(){
+  var caps=[
+    "① Tokens → ids → embeddings (d ≈ 768) + information de position",
+    "② Chaque token est projeté en requête Q, clé K et valeur V",
+    "③ Scores QKᵀ/√dₖ : qui regarde qui ? Masque causal : pas de futur",
+    "④ Softmax par ligne, puis somme pondérée des valeurs V",
+    "⑤ Résiduel + LayerNorm, puis FFN appliqué à chaque token",
+    "⑥ Après N couches : Linear → softmax sur |V| → token suivant"
+  ];
+  var svg=document.getElementById('svg'),cap=document.getElementById('cap'),i=0;
+  function show(){
+    svg.classList.add('anim');
+    var gs=svg.querySelectorAll('.g');
+    for(var k=0;k<gs.length;k++){
+      gs[k].classList.toggle('on',gs[k].getAttribute('data-s').split(' ').indexOf(String(i))>-1);
+    }
+    cap.textContent=caps[i];
+    i=(i+1)%caps.length;
+  }
+  show();
+  setInterval(show,3800);
+})();
+</script>
+</body>
+</html>

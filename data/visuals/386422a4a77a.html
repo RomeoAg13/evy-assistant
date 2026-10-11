@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Transformer</title>
+<style>
+html,body{margin:0;height:100%;background:#0b1020;overflow:hidden}
+svg{display:block;width:100vw;height:100vh}
+text{fill:#f8fafc;font:28px 'Segoe UI',Arial,sans-serif;text-anchor:middle;dominant-baseline:central}
+.h{font-size:48px;font-weight:700}
+.ti{font-size:52px;font-weight:700;text-anchor:start;fill:#fbbf24}
+.s{font-size:30px;fill:#cbd5e1}
+.f{font:italic 40px Georgia,'Times New Roman',serif;fill:#fde68a}
+.sub{font-size:22px}
+rect{stroke-width:3}
+.blk{fill:#111a33;stroke:#475569;stroke-width:3}
+.emb{fill:#047857;stroke:#6ee7b7}
+.mha{fill:#1d4ed8;stroke:#93c5fd}
+.msk{fill:#c2410c;stroke:#fdba74}
+.crs{fill:#be185d;stroke:#f9a8d4}
+.an{fill:#334155;stroke:#94a3b8}
+.ff{fill:#6d28d9;stroke:#c4b5fd}
+.out{fill:#0f766e;stroke:#5eead4}
+.mem{fill:#854d0e;stroke:#fcd34d}
+.dash{stroke-dasharray:8 6}
+.l{stroke:#cbd5e1;stroke-width:3;fill:none;marker-end:url(#ar)}
+.sk{stroke:#94a3b8;stroke-width:3;fill:none;marker-end:url(#ar);stroke-dasharray:2 0}
+.a{animation:p 20s infinite;animation-delay:calc(var(--i)*2s)}
+@keyframes p{0%{filter:none}2%,9%{filter:brightness(1.9) drop-shadow(0 0 12px #ffffffbb)}11%,100%{filter:none}}
+</style></head><body>
+<svg viewBox="0 0 1920 1080" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="ar" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0 0L10 4L0 8z" fill="#cbd5e1"/></marker></defs>
+
+<text class="ti" x="60" y="48">Transformer · Vaswani et al., 2017</text>
+
+<!-- ============ ENCODEUR ============ -->
+<text class="h" x="310" y="118" style="fill:#93c5fd">Encodeur</text>
+<text class="s" x="310" y="200">Self-attention bidirectionnelle</text>
+<text class="s" x="310" y="250">N = 6 blocs · d_model = 512</text>
+<text class="s" x="310" y="300">h = 8 têtes · dₖ = 64 · d_ff = 2048</text>
+<rect class="blk" x="60" y="525" width="520" height="380" rx="18"/>
+<text x="555" y="548" style="fill:#fbbf24;font-weight:700">×N</text>
+
+<g class="a" style="--i:0">
+ <rect class="emb" x="100" y="930" width="420" height="55" rx="12"/>
+ <text x="310" y="958">Embedding + encodage pos.</text>
+ <path class="l" d="M310 930V886"/>
+</g>
+<text class="s" x="310" y="1022">Tokens d'entrée (n)</text>
+
+<g class="a" style="--i:1">
+ <rect class="mha" x="100" y="820" width="420" height="64" rx="12"/><text x="310" y="852">Attention multi-têtes</text>
+ <rect class="an" x="100" y="730" width="420" height="64" rx="12"/><text x="310" y="762">Add &amp; Norm</text>
+ <rect class="ff" x="100" y="640" width="420" height="64" rx="12"/><text x="310" y="672">Feed-Forward</text>
+ <rect class="an" x="100" y="550" width="420" height="64" rx="12"/><text x="310" y="582">Add &amp; Norm</text>
+ <path class="l" d="M310 820V796"/><path class="l" d="M310 730V706"/><path class="l" d="M310 640V616"/>
+ <path class="sk" d="M310 898H548V762H522"/><path class="sk" d="M310 717H548V582H522"/>
+ <path class="l" d="M310 550V502"/>
+</g>
+
+<g class="a" style="--i:2">
+ <rect class="mem" x="100" y="440" width="420" height="60" rx="12"/><text x="310" y="470">Mémoire Z (n × 512)</text>
+ <path class="l" d="M520 470H635V672H728"/>
+ <text x="575" y="440" style="fill:#fcd34d;font-weight:700">K, V</text>
+</g>
+
+<!-- ============ DECODEUR ============ -->
+<text class="h" x="940" y="118" style="fill:#f9a8d4">Décodeur</text>
+<rect class="blk" x="690" y="345" width="520" height="560" rx="18"/>
+<text x="1185" y="362" style="fill:#fbbf24;font-weight:700">×N</text>
+
+<g class="a" style="--i:3">
+ <rect class="emb" x="730" y="930" width="420" height="55" rx="12"/>
+ <text x="940" y="958">Embedding + encodage pos.</text>
+ <path class="l" d="M940 930V886"/>
+ <rect class="msk" x="730" y="820" width="420" height="64" rx="12"/><text x="940" y="852">Attention masquée</text>
+ <rect class="an" x="730" y="730" width="420" height="64" rx="12"/><text x="940" y="762">Add &amp; Norm</text>
+ <path class="l" d="M940 820V796"/><path class="sk" d="M940 898H1175V762H1152"/>
+</g>
+<text class="s" x="940" y="1022">Sorties décalées à droite</text>
+
+<g class="a" style="--i:4">
+ <rect class="crs" x="730" y="640" width="420" height="64" rx="12"/><text x="940" y="672">Attention croisée</text>
+ <rect class="an" x="730" y="550" width="420" height="64" rx="12"/><text x="940" y="582">Add &amp; Norm</text>
+ <path class="l" d="M940 730V706"/><path class="l" d="M940 640V616"/><path class="sk" d="M940 717H1175V582H1152"/>
+</g>
+
+<g class="a" style="--i:5">
+ <rect class="ff" x="730" y="460" width="420" height="64" rx="12"/><text x="940" y="492">Feed-Forward</text>
+ <rect class="an" x="730" y="370" width="420" height="64" rx="12"/><text x="940" y="402">Add &amp; Norm</text>
+ <path class="l" d="M940 550V526"/><path class="l" d="M940 460V436"/><path class="sk" d="M940 537H1175V402H1152"/>
+</g>
+
+<g class="a" style="--i:6">
+ <path class="l" d="M940 370V322"/>
+ <rect class="out" x="730" y="270" width="420" height="50" rx="12"/><text x="940" y="295">Linear (512 → |V|)</text>
+ <path class="l" d="M940 270V247"/>
+ <rect class="out" x="730" y="197" width="420" height="50" rx="12"/><text x="940" y="222">Softmax</text>
+ <path class="l" d="M940 197V176"/>
+ <text x="940" y="158">Probabilités du token suivant</text>
+</g>
+
+<!-- ============ ENCART ATTENTION ============ -->
+<rect class="blk" x="1260" y="140" width="630" height="900" rx="18" style="stroke:#fbbf24"/>
+<text x="1575" y="190" style="font-size:36px;font-weight:700;fill:#fbbf24">Attention scaled dot-product</text>
+<text class="f" x="1575" y="260">softmax( QKᵀ / √dₖ ) V</text>
+
+<g class="a" style="--i:7">
+ <rect class="emb" x="1425" y="945" width="300" height="50" rx="12"/><text x="1575" y="970">X  (n × d_model)</text>
+ <path class="l" d="M1520 945L1390 907"/><path class="l" d="M1575 945V907"/><path class="l" d="M1630 945L1750 907"/>
+ <rect class="an" x="1285" y="855" width="175" height="50" rx="12"/><text x="1372" y="880">W<tspan class="sub" dy="6">Q</tspan></text>
+ <rect class="an" x="1480" y="855" width="175" height="50" rx="12"/><text x="1567" y="880">W<tspan class="sub" dy="6">K</tspan></text>
+ <rect class="an" x="1675" y="855" width="175" height="50" rx="12"/><text x="1762" y="880">W<tspan class="sub" dy="6">V</tspan></text>
+ <path class="l" d="M1372 855V817"/><path class="l" d="M1567 855V817"/><path class="l" d="M1762 855V817"/>
+ <rect class="mha" x="1285" y="770" width="175" height="46" rx="12"/><text x="1372" y="793">Q  n×dₖ</text>
+ <rect class="mha" x="1480" y="770" width="175" height="46" rx="12"/><text x="1567" y="793">K  n×dₖ</text>
+ <rect class="mha" x="1675" y="770" width="175" height="46" rx="12"/><text x="1762" y="793">V  n×dᵥ</text>
+</g>
+
+<g class="a" style="--i:8">
+ <path class="l" d="M1372 770V732"/><path class="l" d="M1567 770V732"/>
+ <rect class="ff" x="1320" y="680" width="300" height="50" rx="12"/><text x="1470" y="705">Q · Kᵀ  (n × n)</text>
+ <path class="l" d="M1470 680V667"/>
+ <rect class="an" x="1320" y="615" width="300" height="50" rx="12"/><text x="1470" y="640">÷ √dₖ</text>
+ <path class="l" d="M1470 615V602"/>
+ <rect class="msk dash" x="1320" y="550" width="300" height="50" rx="12" style="fill:none"/><text x="1470" y="575" style="fill:#fdba74">+ masque (−∞)</text>
+ <path class="l" d="M1470 550V537"/>
+ <rect class="out" x="1320" y="485" width="300" height="50" rx="12"/><text x="1470" y="510">softmax (par ligne)</text>
+ <path class="l" d="M1470 485V472"/>
+</g>
+
+<g class="a" style="--i:9">
+ <path class="l" d="M1762 770V445H1622"/>
+ <rect class="crs" x="1320" y="420" width="300" height="50" rx="12"/><text x="1470" y="445">× V</text>
+ <path class="l" d="M1470 420V382"/>
+ <rect class="emb" x="1320" y="330" width="300" height="50" rx="12"/><text x="1470" y="355">Sortie  n × dᵥ</text>
+</g>
+</svg>
+</body></html>

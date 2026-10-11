@@ -50,6 +50,9 @@
   .label { font-size: 2.4vh; letter-spacing: .3em; text-transform: uppercase; color: var(--accent); }
   .title { font-size: 5vh; font-weight: 500; max-width: 70vw; line-height: 1.25; }
   #error .label { color: var(--danger); }
+  #answer { align-items: flex-start; text-align: left; padding: 10vh 12vw; }
+  #answer .title { font-size: 3.4vh; color: var(--muted); font-weight: 400; max-width: none; }
+  #answer-text { font-size: 4.6vh; line-height: 1.45; max-width: 76vw; font-weight: 300; }
   #error .msg { font-size: 2.4vh; color: var(--muted); max-width: 60vw; }
 
   /* Visuel */
@@ -72,6 +75,25 @@
     position: fixed; top: 2vh; right: 2vw; font-size: 1.8vh; color: var(--danger);
     display: none;
   }
+
+  /* Révision */
+  #quiz { justify-content: flex-start; padding: 7vh 9vw; gap: 4vh; }
+  .quiz-head { width: 100%; display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 2.4vh; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); }
+  .quiz-head span:last-child { color: var(--muted); }
+  #quiz-feedback { width: 100%; text-align: left; padding: 2.4vh 2.4vw; border-radius: 1.4vh;
+    background: rgba(255,255,255,.04); border-left: .6vh solid var(--muted); display: none; }
+  #quiz-feedback.juste { border-color: #4fd18b; } #quiz-feedback.partiel { border-color: #f2c14e; }
+  #quiz-feedback.faux { border-color: var(--danger); }
+  #fb-verdict { font-size: 2.4vh; font-weight: 600; letter-spacing: .15em; text-transform: uppercase; margin-bottom: 1vh; }
+  #quiz-feedback.juste #fb-verdict { color: #4fd18b; } #quiz-feedback.partiel #fb-verdict { color: #f2c14e; }
+  #quiz-feedback.faux #fb-verdict { color: var(--danger); }
+  #fb-prev { font-size: 2.2vh; color: var(--muted); margin-bottom: 1vh; }
+  #fb-answer { font-size: 2.8vh; line-height: 1.4; }
+  #quiz-question { flex: 1; display: flex; align-items: center; font-size: 5.6vh; line-height: 1.3;
+    font-weight: 500; max-width: 82vw; text-align: left; width: 100%; }
+  #quiz-end .score { display: flex; gap: 6vw; font-size: 9vh; font-weight: 200; }
+  #quiz-end .score small { display: block; font-size: 2.4vh; color: var(--muted); letter-spacing: .15em; text-transform: uppercase; }
 </style>
 </head>
 <body>
@@ -85,6 +107,30 @@
     <div class="orb"></div>
     <div class="label">Evy prépare le visuel</div>
     <div class="title" id="loading-title"></div>
+  </section>
+
+  <section id="answer" class="screen">
+    <div class="label">Evy a répondu</div>
+    <div class="title" id="answer-title"></div>
+    <div id="answer-text"></div>
+  </section>
+
+  <section id="quiz" class="screen">
+    <div class="quiz-head"><span id="quiz-title"></span><span id="quiz-num"></span></div>
+    <div id="quiz-feedback">
+      <div id="fb-verdict"></div>
+      <div id="fb-prev"></div>
+      <div id="fb-answer"></div>
+    </div>
+    <div id="quiz-question"></div>
+  </section>
+
+  <section id="quiz-end" class="screen">
+    <div class="label">Révision terminée</div>
+    <div class="title" id="end-title"></div>
+    <div class="score">
+      <div id="end-good"></div><div id="end-partial"></div><div id="end-bad"></div>
+    </div>
   </section>
 
   <section id="error" class="screen">
@@ -101,7 +147,7 @@
 
 <script>
   const $ = (id) => document.getElementById(id);
-  const screens = ["idle", "loading", "error", "visual"];
+  const screens = ["idle", "loading", "answer", "quiz", "quiz-end", "error", "visual"];
   let idleTimer = null;
   const IDLE_AFTER_MS = 30 * 60 * 1000; // retour à l'horloge après 30 min
 
@@ -129,6 +175,7 @@
   let shownId = null;
   function handle(msg) {
     if (msg.type === "loading") {
+      shownId = null;
       $("loading-title").textContent = msg.title;
       show("loading");
     } else if (msg.type === "visual") {
@@ -140,6 +187,36 @@
       c.textContent = msg.title;
       c.classList.add("on");
       setTimeout(() => c.classList.remove("on"), 8000);
+    } else if (msg.type === "answer") {
+      shownId = null;
+      $("answer-title").textContent = msg.title;
+      $("answer-text").textContent = msg.text;
+      show("answer");
+    } else if (msg.type === "quiz") {
+      shownId = null;
+      $("quiz-title").textContent = "Révision · " + msg.title;
+      $("quiz-num").textContent = "Question " + msg.num;
+      $("quiz-question").textContent = msg.question;
+      const fb = $("quiz-feedback");
+      if (msg.feedback) {
+        const labels = { juste: "Juste", partiel: "Partiel", faux: "Raté" };
+        fb.className = msg.feedback.verdict;
+        $("fb-verdict").textContent = labels[msg.feedback.verdict] || "";
+        $("fb-prev").textContent = msg.feedback.question;
+        $("fb-answer").textContent = "Réponse : " + msg.feedback.reponse;
+        fb.style.display = "block";
+      } else {
+        fb.style.display = "none";
+      }
+      show("quiz");
+    } else if (msg.type === "quiz_end") {
+      shownId = null;
+      $("end-title").textContent = msg.title;
+      const sc = msg.score || {};
+      $("end-good").innerHTML = (sc.juste || 0) + "<small>justes</small>";
+      $("end-partial").innerHTML = (sc.partiel || 0) + "<small>partielles</small>";
+      $("end-bad").innerHTML = (sc.faux || 0) + "<small>ratées</small>";
+      show("quiz-end");
     } else if (msg.type === "error") {
       $("error-title").textContent = msg.title;
       $("error-msg").textContent = msg.message || "";

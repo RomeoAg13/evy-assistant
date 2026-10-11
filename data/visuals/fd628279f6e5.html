@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><title>Bloc de transformer</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<style>
+html,body{margin:0;height:100%;background:#0b1020;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:#0b1020;font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:#f1f5f9}
+svg{position:absolute;left:0;top:0}
+text{fill:#f1f5f9;font-family:inherit}
+.b{fill:#172036;stroke:var(--c);stroke-width:3}
+.t{font-size:30px;text-anchor:middle}
+.s{font-size:28px;text-anchor:middle;fill:#94a3b8}
+.ln{stroke:#cbd5e1;stroke-width:4;fill:none}
+.res{stroke:#f472b6;stroke-width:5;fill:none;stroke-dasharray:14 8}
+.hl{animation:hl 13.5s infinite;animation-delay:calc(var(--i)*1.5s)}
+@keyframes hl{0%,9%{stroke:#fff;stroke-width:8;fill:#2a3a63}12%,100%{stroke:var(--c);stroke-width:3;fill:#172036}}
+#f{position:absolute;left:1120px;top:150px;width:740px;height:200px;box-sizing:border-box;border:3px solid #fbbf24;border-radius:18px;background:#1a1530;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:34px}
+#f small{font-size:28px;color:#fbbf24;margin-bottom:8px}
+#f .katex{font-size:1.05em}
+</style></head><body>
+<div id="stage">
+<svg width="1920" height="1080" viewBox="0 0 1920 1080">
+<defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#cbd5e1"/></marker>
+<marker id="p" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f472b6"/></marker></defs>
+<text x="60" y="90" font-size="60" font-weight="700" style="font-size:60px">Un bloc de transformer</text>
+
+<!-- flèches principales -->
+<g class="ln" marker-end="url(#a)">
+<path d="M560 975V945" marker-end="none"/>
+<path d="M330 945V897"/><path d="M560 945V897"/><path d="M790 945V897"/>
+<path d="M330 830L420 792"/><path d="M560 830L570 792" />
+<path d="M495 735V717"/><path d="M495 665V647"/>
+<path d="M790 830V647"/>
+<path d="M560 515V492"/><path d="M560 440V412"/><path d="M560 340V312"/><path d="M560 260V227"/>
+<path d="M560 170V130"/>
+</g>
+<path class="ln" d="M330 945H790"/>
+
+<!-- résidus -->
+<path class="res" marker-end="url(#p)" d="M560 945H180V465H238"/>
+<path class="res" marker-end="url(#p)" d="M560 425H180V285H238"/>
+<text transform="translate(140 700) rotate(-90)" class="s" style="fill:#f472b6">connexion résiduelle</text>
+
+<!-- entrée -->
+<rect class="b hl" style="--c:#94a3b8;--i:0" x="240" y="975" width="640" height="70" rx="14"/>
+<text class="t" x="560" y="1019">Embeddings + encodage positionnel</text>
+
+<!-- MHA -->
+<rect x="230" y="515" width="660" height="400" rx="20" fill="#0f1830" stroke="#38bdf8" stroke-width="3" stroke-dasharray="3 0"/>
+<text class="t" x="560" y="558" style="fill:#38bdf8;font-weight:700">Attention multi-têtes (h têtes)</text>
+<rect class="b hl" style="--c:#60a5fa;--i:1" x="250" y="830" width="160" height="66" rx="12"/><text class="t" x="330" y="872">Q = XW_Q</text>
+<rect class="b hl" style="--c:#4ade80;--i:1" x="480" y="830" width="160" height="66" rx="12"/><text class="t" x="560" y="872">K = XW_K</text>
+<rect class="b hl" style="--c:#fb923c;--i:1" x="710" y="830" width="160" height="66" rx="12"/><text class="t" x="790" y="872">V = XW_V</text>
+<rect class="b hl" style="--c:#a78bfa;--i:2" x="330" y="735" width="330" height="55" rx="12"/><text class="t" x="495" y="773">QKᵀ / √d_k</text>
+<rect class="b hl" style="--c:#a78bfa;--i:3" x="330" y="665" width="330" height="50" rx="12"/><text class="t" x="495" y="700">softmax</text>
+<rect class="b hl" style="--c:#fb923c;--i:4" x="340" y="595" width="460" height="52" rx="12"/><text class="t" x="570" y="631">poids × V  → concat · W_O</text>
+
+<rect class="b hl" style="--c:#f472b6;--i:5" x="240" y="440" width="640" height="50" rx="12"/><text class="t" x="560" y="475">Add &amp; Norm</text>
+<rect class="b hl" style="--c:#facc15;--i:6" x="240" y="340" width="640" height="70" rx="12"/><text class="t" x="560" y="383">Feed-forward (Linear · GELU · Linear)</text>
+<rect class="b hl" style="--c:#f472b6;--i:7" x="240" y="260" width="640" height="50" rx="12"/><text class="t" x="560" y="295">Add &amp; Norm</text>
+<rect class="b hl" style="--c:#94a3b8;--i:8" x="240" y="170" width="640" height="55" rx="12"/><text class="t" x="560" y="208">Sortie : n × d_model</text>
+<text class="s" x="1000" y="155" style="text-anchor:end;display:none">vers bloc suivant</text>
+
+<!-- N fois -->
+<path d="M930 175H955V1040H930" fill="none" stroke="#fbbf24" stroke-width="6"/>
+<text x="975" y="625" style="font-size:68px;font-weight:700;fill:#fbbf24">×N</text>
+<text x="975" y="670" style="font-size:28px;fill:#fbbf24">blocs</text>
+
+<!-- dimensions -->
+<text x="1120" y="420" style="font-size:40px;font-weight:700;fill:#38bdf8">Dimensions (n tokens)</text>
+<g style="font-size:30px">
+<text x="1120" y="490">X (entrée) : <tspan fill="#94a3b8">n × d_model</tspan></text>
+<text x="1120" y="560"><tspan fill="#60a5fa">Q</tspan>, <tspan fill="#4ade80">K</tspan> : <tspan fill="#94a3b8">n × d_k , d_k = d_model / h</tspan></text>
+<text x="1120" y="630"><tspan fill="#fb923c">V</tspan> : <tspan fill="#94a3b8">n × d_v</tspan></text>
+<text x="1120" y="700"><tspan fill="#a78bfa">QKᵀ, softmax</tspan> : <tspan fill="#94a3b8">n × n</tspan></text>
+<text x="1120" y="770">poids·V → concat : <tspan fill="#94a3b8">n × d_model</tspan></text>
+<text x="1120" y="840"><tspan fill="#facc15">FFN</tspan> : <tspan fill="#94a3b8">d → 4d → d</tspan></text>
+<text x="1120" y="930" style="fill:#f472b6">Add&amp;Norm : LayerNorm(x + sous-couche(x))</text>
+<text x="1120" y="1000" style="fill:#94a3b8">√d_k évite la saturation du softmax</text>
+</g>
+</svg>
+<div id="f"><small>Attention à produit scalaire normalisé</small>
+<span id="k">Attention(Q, K, V) = softmax( QKᵀ / √d_k ) V</span></div>
+</div>
+<script>
+function fit(){var s=Math.min(innerWidth/1920,innerHeight/1080);document.getElementById('stage').style.transform='scale('+s+')'}
+fit();addEventListener('resize',fit);
+</script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script>
+try{katex.render("\\mathrm{Attention}(Q,K,V)=\\mathrm{softmax}\\!\\left(\\frac{QK^{\\top}}{\\sqrt{d_k}}\\right)V",document.getElementById('k'),{throwOnError:true})}catch(e){}
+</script>
+</body></html>

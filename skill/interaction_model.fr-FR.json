@@ -3,32 +3,99 @@
     "languageModel": {
       "invocationName": "evy",
       "intents": [
-        { "name": "AMAZON.CancelIntent", "samples": [] },
-        { "name": "AMAZON.HelpIntent", "samples": [] },
-        { "name": "AMAZON.StopIntent", "samples": [] },
-        { "name": "AMAZON.NavigateHomeIntent", "samples": [] },
-        { "name": "AMAZON.FallbackIntent", "samples": [] },
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
         {
           "name": "QuestionIntent",
-          "slots": [{ "name": "query", "type": "AMAZON.SearchQuery" }],
+          "slots": [
+            {
+              "name": "query",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
           "samples": [
             "explique-moi {query}",
             "explique {query}",
+            "réexplique-moi {query}",
             "dis-moi {query}",
             "c'est quoi {query}",
             "qu'est-ce que {query}",
+            "qu'est-ce qui {query}",
             "comment {query}",
             "pourquoi {query}",
             "est-ce que {query}",
+            "et {query}",
+            "mais {query}",
+            "donc {query}",
+            "alors {query}",
+            "je comprends pas {query}",
+            "je ne comprends pas {query}",
+            "j'ai pas compris {query}",
+            "à quoi sert {query}",
+            "à quoi servent {query}",
+            "ça sert à quoi {query}",
+            "quelle est {query}",
+            "quel est {query}",
+            "quels sont {query}",
+            "quelles sont {query}",
+            "combien {query}",
+            "quand {query}",
+            "où {query}",
+            "qui {query}",
+            "parle-moi de {query}",
+            "détaille {query}",
+            "développe {query}",
+            "reviens sur {query}",
+            "précise {query}",
+            "donne-moi un exemple {query}",
+            "un exemple {query}",
+            "c'est quoi la différence {query}",
+            "quelle différence {query}",
+            "compare {query}",
+            "dans le schéma {query}",
+            "sur le schéma {query}",
+            "sur l'écran {query}",
+            "à l'écran {query}",
+            "la flèche {query}",
+            "le bloc {query}",
+            "l'étape {query}",
+            "la partie {query}",
+            "la formule {query}",
             "j'ai une question {query}",
             "je veux savoir {query}",
             "aide-moi à {query}",
-            "raconte-moi {query}"
+            "raconte-moi {query}",
+            "tu peux m'expliquer {query}",
+            "peux-tu m'expliquer {query}",
+            "résume {query}"
           ]
         },
         {
           "name": "VisualIntent",
-          "slots": [{ "name": "query", "type": "AMAZON.SearchQuery" }],
+          "slots": [
+            {
+              "name": "query",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
           "samples": [
             "montre-moi {query}",
             "montre {query}",
@@ -40,9 +107,25 @@
             "fais-moi un schéma de {query}",
             "fais-moi un schéma sur {query}",
             "fais-moi un dessin de {query}",
+            "fais un schéma {query}",
             "schématise {query}",
+            "zoome sur {query}",
+            "fais-moi voir {query}",
             "de me montrer {query}",
             "de me dessiner {query}"
+          ]
+        },
+        {
+          "name": "NewTopicIntent",
+          "slots": [],
+          "samples": [
+            "nouveau sujet",
+            "on change de sujet",
+            "change de sujet",
+            "oublie tout",
+            "on recommence",
+            "nouvelle conversation",
+            "on passe à autre chose"
           ]
         },
         {
@@ -53,6 +136,150 @@
             "éteins l'écran",
             "coupe la télé",
             "ferme l'écran"
+          ]
+        },
+        {
+          "name": "QuizIntent",
+          "slots": [
+            {
+              "name": "topic",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "interroge-moi sur {topic}",
+            "de m'interroger sur {topic}",
+            "pose-moi des questions sur {topic}",
+            "de me poser des questions sur {topic}",
+            "fais-moi réviser {topic}",
+            "de me faire réviser {topic}",
+            "révise avec moi {topic}",
+            "quiz sur {topic}",
+            "lance un quiz sur {topic}",
+            "teste-moi sur {topic}",
+            "de me tester sur {topic}",
+            "on révise {topic}",
+            "je veux réviser {topic}"
+          ]
+        },
+        {
+          "name": "QuizAnyIntent",
+          "slots": [],
+          "samples": [
+            "interroge-moi",
+            "de m'interroger",
+            "fais-moi réviser",
+            "de me faire réviser",
+            "pose-moi des questions",
+            "lance une révision",
+            "lance un quiz",
+            "on révise",
+            "je veux réviser",
+            "teste-moi",
+            "fais-moi un quiz"
+          ]
+        },
+        {
+          "name": "AnswerIntent",
+          "slots": [
+            {
+              "name": "answer",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "c'est {answer}",
+            "ce sont {answer}",
+            "la réponse est {answer}",
+            "la réponse c'est {answer}",
+            "réponse {answer}",
+            "je pense que {answer}",
+            "je pense {answer}",
+            "je dirais {answer}",
+            "je dirais que {answer}",
+            "je crois que {answer}",
+            "il s'agit de {answer}",
+            "il faut {answer}",
+            "parce que {answer}",
+            "ça permet de {answer}",
+            "ça sert à {answer}",
+            "on utilise {answer}",
+            "on {answer}",
+            "il y a {answer}",
+            "ça {answer}",
+            "elle {answer}",
+            "il {answer}"
+          ]
+        },
+        {
+          "name": "DontKnowIntent",
+          "slots": [],
+          "samples": [
+            "je sais pas",
+            "je ne sais pas",
+            "aucune idée",
+            "je sèche",
+            "j'en sais rien",
+            "je donne ma langue au chat",
+            "donne-moi la réponse",
+            "c'est quoi la réponse"
+          ]
+        },
+        {
+          "name": "SkipIntent",
+          "slots": [],
+          "samples": [
+            "question suivante",
+            "passe",
+            "on passe",
+            "suivante",
+            "passe à la suivante",
+            "autre question"
+          ]
+        },
+        {
+          "name": "HintIntent",
+          "slots": [],
+          "samples": [
+            "un indice",
+            "donne-moi un indice",
+            "aide-moi",
+            "j'ai besoin d'un indice",
+            "indice"
+          ]
+        },
+        {
+          "name": "RepeatIntent",
+          "slots": [],
+          "samples": [
+            "répète",
+            "répète la question",
+            "tu peux répéter",
+            "redis la question",
+            "pardon"
+          ]
+        },
+        {
+          "name": "ScoreIntent",
+          "slots": [],
+          "samples": [
+            "mon score",
+            "quel est mon score",
+            "où j'en suis",
+            "combien j'en ai"
+          ]
+        },
+        {
+          "name": "StopQuizIntent",
+          "slots": [],
+          "samples": [
+            "arrête la révision",
+            "fin de la révision",
+            "fin du quiz",
+            "arrête le quiz",
+            "on arrête de réviser",
+            "termine la révision",
+            "stop la révision"
           ]
         }
       ],

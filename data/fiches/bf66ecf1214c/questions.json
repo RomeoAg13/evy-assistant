@@ -1,0 +1,390 @@
+{
+ "titre": "Gouvernance et sécurité de l'information (cours 1 et suite)",
+ "resume": "La fiche couvre le vocabulaire de la cybersécurité, les motivations des attaquants, les cibles et les quatre grands types d'attaque (virale, opportuniste, déni de service, APT). Elle traite aussi les acteurs et le cadre français et européen (ANSSI, DORA, NIS2), l'état de la menace, puis la détection, les outils et la gestion de crise avec l'inforensique.",
+ "questions": [
+  {
+   "q": "Comment définit-on la cybersécurité, et quels sont les trois verbes à retenir ?",
+   "q_ecran": "Définir la cybersécurité. Quels sont les trois verbes clés ?",
+   "reponse": "C'est l'ensemble des moyens organisationnels, humains, techniques et juridiques mis en œuvre pour garantir, conserver et rétablir la sécurité d'un système d'information. Elle n'est donc pas seulement technique.",
+   "points_cles": [
+    "moyens organisationnels, humains, techniques, juridiques",
+    "garantir, conserver, rétablir",
+    "pas seulement technique"
+   ],
+   "indice": "Pense aux trois temps : avant, pendant et après un incident.",
+   "type": "definition",
+   "difficulte": 1,
+   "id": "q1"
+  },
+  {
+   "q": "Quelles sont les trois catégories de cybercriminalité ? Donne un exemple pour chacune.",
+   "q_ecran": "Les 3 catégories de cybercriminalité, avec un exemple chacune.",
+   "reponse": "Les infractions spécifiques, où l'informatique est la cible (atteinte aux STAD). Les infractions liées, qui sont des infractions classiques commises via les réseaux (incitation à la haine). Les infractions facilitées, où l'informatique est un outil (escroquerie, blanchiment, contrefaçon).",
+   "points_cles": [
+    "spécifiques : informatique = cible",
+    "liées : infractions classiques via les réseaux",
+    "facilitées : informatique = outil facilitateur"
+   ],
+   "indice": "Regarde le rôle de l'informatique : cible, canal ou outil.",
+   "type": "definition",
+   "difficulte": 2,
+   "id": "q2"
+  },
+  {
+   "q": "Quelle différence fait-on entre chiffrement, déchiffrement et décryptage ? Et pourquoi faut-il bannir le mot « cryptage » ?",
+   "q_ecran": "Chiffrement vs déchiffrement vs décryptage. Pourquoi bannir « cryptage » ?",
+   "reponse": "Le chiffrement rend une information incompréhensible sans la clé. Le déchiffrement l'inverse avec la clé connue. Le décryptage retrouve l'information sans connaître la clé, en cassant le code. « Cryptage » est un anglicisme de encryption et signifierait chiffrer sans connaître la clé, ce qui n'a pas de sens.",
+   "points_cles": [
+    "déchiffrement : clé connue",
+    "décryptage : sans la clé, c'est une attaque",
+    "cryptage : anglicisme, à bannir"
+   ],
+   "indice": "Dé-CHIFF-rement : j'ai le chiffre. Dé-CRYPT-age : je casse la crypte.",
+   "type": "piege",
+   "difficulte": 2,
+   "id": "q3"
+  },
+  {
+   "q": "Quelle est la différence entre identification et authentification ? Donne un exemple de chacune.",
+   "q_ecran": "Identification vs authentification : différence et exemples.",
+   "reponse": "L'identification est déclarative : on dit qui on est, par exemple avec un login. L'authentification apporte la preuve de cette identité, par exemple avec un mot de passe ou une double authentification.",
+   "points_cles": [
+    "identification = déclaratif (login)",
+    "authentification = preuve (mot de passe, 2FA)"
+   ],
+   "indice": "L'un déclare, l'autre prouve.",
+   "type": "piege",
+   "difficulte": 1,
+   "id": "q4"
+  },
+  {
+   "q": "Que désignent les termes injection et exfiltration ? Dans quel sens va le flux pour chacun ?",
+   "q_ecran": "Injection vs exfiltration : définition et sens du flux.",
+   "reponse": "L'injection importe des informations (données ou code) dans un système, donc vers l'intérieur. L'exfiltration retire des informations du système (données, mots de passe, fichiers confidentiels), donc vers l'extérieur.",
+   "points_cles": [
+    "injection : vers l'intérieur",
+    "exfiltration : vers l'extérieur"
+   ],
+   "indice": "Un attaquant met quelque chose dedans, ou en sort quelque chose.",
+   "type": "comparaison",
+   "difficulte": 1,
+   "id": "q5"
+  },
+  {
+   "q": "Qu'est-ce qui distingue un white hat d'un black hat ? Le terme hacker est-il péjoratif ?",
+   "q_ecran": "White hat vs black hat ; hacker est-il péjoratif ?",
+   "reponse": "La compétence est la même, c'est le cadre légal qui diffère : le white hat agit dans la légalité, le black hat hors la loi. Hacker n'est pas péjoratif : c'est une personne passionnée par le fonctionnement intime des choses.",
+   "points_cles": [
+    "même compétence",
+    "white hat légal, black hat hors la loi",
+    "hacker non péjoratif"
+   ],
+   "indice": "Ce n'est pas le savoir-faire qui change.",
+   "type": "definition",
+   "difficulte": 1,
+   "id": "q6"
+  },
+  {
+   "q": "Quelles sont les quatre grandes motivations des attaquants, et laquelle domine d'après les statistiques Hackmageddon ?",
+   "q_ecran": "Les 4 motivations des attaquants. Laquelle domine (Hackmageddon) ?",
+   "reponse": "Le gain financier, l'hacktivisme, l'espionnage et l'acquisition de ressources d'attaque. Le cybercrime domine avec environ 69 % des cas, soit près de sept attaques sur dix, et l'espionnage arrive en deuxième position avec environ 20 %.",
+   "points_cles": [
+    "gain financier, hacktivisme, espionnage, ressources d'attaque",
+    "cybercrime environ 69 %",
+    "espionnage 2e"
+   ],
+   "indice": "Près de sept attaques sur dix suivent la même logique.",
+   "type": "definition",
+   "difficulte": 1,
+   "id": "q7"
+  },
+  {
+   "q": "Pour la fraude aux moyens de paiement, quelle est la différence entre la carte et le virement, en nombre et en montant ?",
+   "q_ecran": "Fraude : carte vs virement, en volume et en valeur.",
+   "reponse": "La carte représente l'essentiel des fraudes en nombre (environ 91 %), mais des montants unitaires faibles. Le virement représente la plus grande part en valeur (environ 39 %) avec peu de cas, mais très coûteux (fraude au président, faux RIB).",
+   "points_cles": [
+    "carte : majorité en volume, petits montants",
+    "virement : majorité en valeur, peu de cas mais coûteux"
+   ],
+   "indice": "Beaucoup de petites fraudes, ou peu de grosses.",
+   "type": "comparaison",
+   "difficulte": 2,
+   "id": "q8"
+  },
+  {
+   "q": "Dans la motivation « acquisition de ressources d'attaque », que cherche l'attaquant, et pourquoi personne n'est trop petit pour être attaqué ?",
+   "q_ecran": "Motivation « ressources d'attaque » : que cherche l'attaquant ? Pourquoi personne n'est « trop petit » ?",
+   "reponse": "Il ne cherche pas le contenu de la cible mais son potentiel offensif : puissance de calcul, relais d'anonymisation, bande passante, pour constituer par exemple un botnet revendu dans l'underground. Même un serveur sans données intéressantes a donc de la valeur.",
+   "points_cles": [
+    "potentiel offensif, pas les données",
+    "puissance, anonymisation, débit (botnet)",
+    "tout équipement a de la valeur"
+   ],
+   "indice": "Pense à un botnet.",
+   "type": "pourquoi",
+   "difficulte": 2,
+   "id": "q9"
+  },
+  {
+   "q": "Quelle est la différence entre un virus et un ver ?",
+   "q_ecran": "Virus vs ver.",
+   "reponse": "Un virus a besoin d'un hôte (fichier, secteur de démarrage, macro) pour se propager. Un ver se propage de façon autonome, sans hôte, et peut ouvrir des backdoors ou installer des virus.",
+   "points_cles": [
+    "virus : besoin d'un hôte",
+    "ver : autonome, sans hôte"
+   ],
+   "indice": "Qui a besoin d'un support ?",
+   "type": "piege",
+   "difficulte": 1,
+   "id": "q10"
+  },
+  {
+   "q": "Explique le principe de l'attaque Slowloris. Sature-t-elle la bande passante ?",
+   "q_ecran": "Principe de Slowloris ; sature-t-elle la bande passante ?",
+   "reponse": "Slowloris ouvre de nombreuses connexions avec des requêtes HTTP partielles et envoie périodiquement des en-têtes bidons sans jamais finir la requête. Le serveur garde chaque connexion TCP ouverte, jusqu'à épuisement des connexions disponibles. Elle ne sature pas la bande passante : elle épuise les connexions, avec très peu de trafic.",
+   "points_cles": [
+    "requêtes HTTP partielles, jamais terminées",
+    "connexions TCP gardées ouvertes",
+    "épuise les connexions, pas la bande passante"
+   ],
+   "indice": "Le serveur attend la fin d'une requête qui ne vient jamais.",
+   "type": "comment",
+   "difficulte": 2,
+   "id": "q11"
+  },
+  {
+   "q": "Quelle différence entre DoS et DDoS, et pourquoi le DDoS est-il plus dur à bloquer ? Comment un déni de service peut-il servir de diversion ?",
+   "q_ecran": "DoS vs DDoS ; DoS comme diversion.",
+   "reponse": "Un DoS vient d'une seule source, un DDoS de nombreuses sources, souvent un botnet, donc il est plus dur à filtrer. Le déni de service peut saturer les logs pour masquer une autre attaque.",
+   "points_cles": [
+    "DoS : une source, DDoS : distribuée (botnet)",
+    "plus dur à bloquer",
+    "saturation des logs pour dissimuler une autre attaque"
+   ],
+   "indice": "Bloquer une adresse ne suffit plus quand elles sont des milliers.",
+   "type": "comparaison",
+   "difficulte": 2,
+   "id": "q12"
+  },
+  {
+   "q": "Que signifie chaque lettre de APT, et en quoi cette attaque diffère-t-elle d'une attaque virale ?",
+   "q_ecran": "APT : Advanced, Persistent, Threat ; différence avec l'attaque virale.",
+   "reponse": "Advanced : techniques sophistiquées comme les 0-days ou l'ingénierie sociale. Persistent : l'attaquant reste longtemps et discrètement. Threat : menace organisée, souvent étatique. Contrairement à l'attaque virale non ciblée, l'APT vise une entreprise choisie, avec une expertise maximale.",
+   "points_cles": [
+    "advanced : 0-day, ingénierie sociale",
+    "persistent : reste longtemps, discret",
+    "cible choisie, contrairement au virus non ciblé"
+   ],
+   "indice": "Les trois mots se traduisent presque mot à mot.",
+   "type": "definition",
+   "difficulte": 2,
+   "id": "q13"
+  },
+  {
+   "q": "Pourquoi parle-t-on d'attaque « opportuniste » sur un site web ? Cite deux exemples d'attaques et la première action de réponse.",
+   "q_ecran": "Attaque opportuniste de site web : pourquoi « opportuniste » ? Exemples et première action.",
+   "reponse": "L'attaquant profite d'une faille existante (défaut de conception, absence de mise à jour) sans viser spécialement la cible. Exemples : injection SQL, XSS, vol de session. Première action : isoler le site, le mettre hors ligne, puis corriger et mettre à jour.",
+   "points_cles": [
+    "exploite une faille existante, cible non spécifique",
+    "SQLi ou XSS",
+    "isoler puis corriger"
+   ],
+   "indice": "Il passe par la porte qui est restée ouverte.",
+   "type": "application",
+   "difficulte": 2,
+   "id": "q14"
+  },
+  {
+   "q": "Que s'est-il passé avec Ashley Madison, et quelle leçon en tirer sur le chiffrement des mots de passe ?",
+   "q_ecran": "Cas Ashley Madison : quelle leçon sur le chiffrement des mots de passe ?",
+   "reponse": "Environ 9,7 Go de données ont été divulgués sur le darknet : coordonnées, données bancaires en partie, transactions. Les mots de passe sont restés bien chiffrés, mais toutes les autres données sensibles ont fuité. Un bon chiffrement des mots de passe ne suffit donc pas.",
+   "points_cles": [
+    "fuite massive sur le darknet",
+    "mots de passe restés chiffrés",
+    "les autres données sensibles ont fuité"
+   ],
+   "indice": "Un seul élément bien protégé ne protège pas tout.",
+   "type": "application",
+   "difficulte": 2,
+   "id": "q15"
+  },
+  {
+   "q": "Pourquoi Stuxnet est-il un événement marquant ?",
+   "q_ecran": "Stuxnet (2010) : pourquoi est-il marquant ?",
+   "reponse": "C'est la première cyberarme connue capable de provoquer des dégâts physiques. Il a ravagé des systèmes SCADA de supervision industrielle Siemens (oléoducs, centrales électriques et nucléaires).",
+   "points_cles": [
+    "première cyberarme à dégâts physiques",
+    "systèmes SCADA industriels"
+   ],
+   "indice": "Le numérique qui détruit du matériel.",
+   "type": "definition",
+   "difficulte": 1,
+   "id": "q16"
+  },
+  {
+   "q": "Qu'est-ce qu'un 0-day, qui peut l'acheter, et quel choix éthique se pose à celui qui en découvre un ?",
+   "q_ecran": "Le 0-day : définition, acheteurs, dilemme éthique.",
+   "reponse": "C'est une vulnérabilité encore inconnue de l'éditeur, donc sans correctif. Elle se vend cher à des services de renseignement, des mafias, ou à l'éditeur ou ses concurrents. Le découvreur doit choisir entre la vendre, la signaler ou la publier, par exemple via un bug bounty.",
+   "points_cles": [
+    "vulnérabilité inconnue de l'éditeur, sans correctif",
+    "acheteurs variés (renseignement, criminels, éditeur)",
+    "choix éthique : vendre, signaler, publier"
+   ],
+   "indice": "Zéro jour pour corriger.",
+   "type": "definition",
+   "difficulte": 2,
+   "id": "q17"
+  },
+  {
+   "q": "Quelle est la différence juridique entre DORA et NIS2, et pourquoi DORA s'applique-t-il déjà alors que NIS2 tarde en France ?",
+   "q_ecran": "DORA (règlement) vs NIS2 (directive) : conséquence juridique.",
+   "reponse": "DORA est un règlement européen, directement applicable sans transposition ; il concerne le secteur financier. NIS2 est une directive qui doit être transposée dans chaque droit national, et la France ne l'avait pas encore fait, d'où le retard. NIS2 couvre un champ bien plus large, 18 secteurs.",
+   "points_cles": [
+    "règlement : application directe",
+    "directive : à transposer",
+    "DORA : finance ; NIS2 : large"
+   ],
+   "indice": "Tout dépend de la nature du texte européen.",
+   "type": "comparaison",
+   "difficulte": 2,
+   "id": "q18"
+  },
+  {
+   "q": "Que signifient PASSI, PDIS et PRIS, et comment les retenir ?",
+   "q_ecran": "PASSI, PDIS, PRIS : rôles et moyen mnémotechnique.",
+   "reponse": "PASSI : prestataire d'audit de la sécurité des SI, avant l'incident. PDIS : prestataire de détection des incidents, pendant. PRIS : prestataire de réponse aux incidents, après. Les trois lettres du milieu suivent le cycle audit, détection, réponse.",
+   "points_cles": [
+    "PASSI = audit (avant)",
+    "PDIS = détection (pendant)",
+    "PRIS = réponse (après)"
+   ],
+   "indice": "Les lettres du milieu : A, D, R.",
+   "type": "definition",
+   "difficulte": 2,
+   "id": "q19"
+  },
+  {
+   "q": "Pourquoi la qualification SecNumCloud existe-t-elle, et quelles lois étrangères vise-t-elle ?",
+   "q_ecran": "SecNumCloud : quel but face aux lois extraterritoriales ?",
+   "reponse": "C'est le plus haut niveau de sécurité et de souveraineté pour une offre cloud en France. Elle garantit que les données ne sont pas soumises aux lois extraterritoriales, comme le Cloud Act américain, qui oblige toute société américaine à fournir ses données sur décision d'un juge, ou la loi chinoise sur le renseignement.",
+   "points_cles": [
+    "souveraineté du cloud",
+    "protection contre les lois extraterritoriales",
+    "exemple : Cloud Act"
+   ],
+   "indice": "Un fournisseur américain peut être contraint de livrer des données, même européennes.",
+   "type": "pourquoi",
+   "difficulte": 3,
+   "id": "q20"
+  },
+  {
+   "q": "Dans les chiffres de Cybermalveillance 2025, 93 % des demandes viennent de particuliers. Pourtant les collectivités sont dites les plus touchées. Comment l'expliquer ?",
+   "q_ecran": "Cybermalveillance 2025 : 93 % de particuliers, mais collectivités « les plus touchées » ?",
+   "reponse": "Parce qu'il faut rapporter les demandes à la population de chaque catégorie : environ 7 particuliers sur 1000, 3 entreprises sur 1000, mais 141 collectivités sur 1000. Les collectivités sont donc proportionnellement de très loin les plus touchées.",
+   "points_cles": [
+    "rapporter à la taille de la population",
+    "141 collectivités sur 1000 contre 7 particuliers sur 1000"
+   ],
+   "indice": "Valeur absolue ou taux ?",
+   "type": "piege",
+   "difficulte": 3,
+   "id": "q21"
+  },
+  {
+   "q": "Qu'est-ce que le dwell time, et que montre l'écart entre détection interne et externe ?",
+   "q_ecran": "Dwell time : définition et écart détection interne / externe.",
+   "reponse": "C'est le nombre de jours, en médiane, pendant lesquels l'attaquant reste dans le SI avant d'être détecté. Il est passé de 416 jours en 2011 à environ 14 en 2025. Quand l'entreprise détecte elle-même (9 jours), c'est bien plus rapide qu'une notification externe (25 jours), d'où l'intérêt d'un SOC.",
+   "points_cles": [
+    "jours de présence avant détection (médiane)",
+    "de plus d'un an à environ deux semaines",
+    "interne plus rapide qu'externe"
+   ],
+   "indice": "Combien de temps l'attaquant reste-t-il invisible ?",
+   "type": "definition",
+   "difficulte": 2,
+   "id": "q22"
+  },
+  {
+   "q": "Quelle différence entre IDS et IPS, et un SIEM bloque-t-il les attaques ?",
+   "q_ecran": "IDS vs IPS ; rôle du SIEM.",
+   "reponse": "Un IDS détecte les activités contraires aux règles, un IPS les bloque. Un SIEM ne bloque rien : il centralise, normalise, agrège et corrèle les logs pour lever des alertes et aider l'inforensique.",
+   "points_cles": [
+    "IDS détecte, IPS bloque",
+    "SIEM : normalisation, agrégation, corrélation",
+    "SIEM ne bloque pas"
+   ],
+   "indice": "L'alarme contre le vigile.",
+   "type": "comparaison",
+   "difficulte": 2,
+   "id": "q23"
+  },
+  {
+   "q": "Quelle est la différence entre un CERT et un SOC (COS) ?",
+   "q_ecran": "CERT vs COS/SOC.",
+   "reponse": "Un CERT est un groupe d'experts qui gère les incidents : réaction, traitement des alertes, partage et coordination avec l'extérieur. Un SOC est un centre de surveillance continue et d'analyse des menaces et des vulnérabilités.",
+   "points_cles": [
+    "CERT : gestion d'incident, réaction, partage",
+    "SOC : surveillance continue, analyse"
+   ],
+   "indice": "Réagir et partager, ou surveiller en continu.",
+   "type": "comparaison",
+   "difficulte": 2,
+   "id": "q24"
+  },
+  {
+   "q": "Quelles sont les quatre phases d'une crise de sécurité, dans l'ordre, et que fait-on pendant le confinement ?",
+   "q_ecran": "Les 4 phases d'une crise de sécurité ; contenu du confinement.",
+   "reponse": "Analyse, confinement, éradication, post-mortem. Pendant le confinement, on traite le point d'entrée en fermant les portes d'entrée, et la méthode de rebond en cloisonnant ou en débranchant.",
+   "points_cles": [
+    "analyse, confinement, éradication, post-mortem",
+    "traiter le point d'entrée",
+    "traiter le rebond"
+   ],
+   "indice": "Le dernier temps tire les leçons.",
+   "type": "comment",
+   "difficulte": 2,
+   "id": "q25"
+  },
+  {
+   "q": "Pourquoi une crise de sécurité diffère-t-elle d'une crise technique classique, et quel conflit en résulte pour les techniciens ?",
+   "q_ecran": "Spécificité d'une crise cyber ; conflit pour les techniciens.",
+   "reponse": "Elle débouche souvent sur un dépôt de plainte et une procédure judiciaire, donc il faut préserver la preuve : empêcher l'attaquant d'effacer ses traces et ne pas altérer soi-même les éléments. Les techniciens doivent parfois agir sans connaître la raison, et à rebours de leurs objectifs habituels : au lieu de maintenir le service, on l'isole, donc on l'interrompt.",
+   "points_cles": [
+    "procédure judiciaire donc préserver la preuve",
+    "confidentialité, besoin d'en connaître",
+    "isoler plutôt que maintenir le service"
+   ],
+   "indice": "Toucher un système peut invalider une preuve.",
+   "type": "pourquoi",
+   "difficulte": 3,
+   "id": "q26"
+  },
+  {
+   "q": "Qu'est-ce que l'inforensique ? Et quelles sont les trois étapes d'analyse après une crise ?",
+   "q_ecran": "Inforensique ; les 3 étapes d'analyse post-crise.",
+   "reponse": "L'inforensique est l'investigation numérique légale : collecter, conserver et analyser des preuves numériques selon les procédures légales, pour les produire en justice. Après la crise : bilan des dommages, retour d'expérience (RETEX), puis plan d'actions priorisé.",
+   "points_cles": [
+    "investigation numérique légale, preuves pour la justice",
+    "bilan, RETEX, plan d'actions"
+   ],
+   "indice": "Modèle de la médecine légale.",
+   "type": "definition",
+   "difficulte": 2,
+   "id": "q27"
+  },
+  {
+   "q": "Classe ces types d'incident du moins cher au plus cher en gestion de crise : défacement, DoS, APT, intrusion avec vol de données personnelles. Pourquoi le dernier est-il le pire ?",
+   "q_ecran": "Coût de gestion de crise : défacement, DoS, APT, vol de données personnelles.",
+   "reponse": "Défacement (plus de 10 k€), puis DoS (plus de 1 M€), puis APT (10 à 100 M€), puis intrusion avec vol de données personnelles (plus de 100 M€). C'est le pire car s'ajoutent notifications, CNIL et RGPD, procès, atteinte à l'image, et c'est la crise la plus longue.",
+   "points_cles": [
+    "ordre : défacement, DoS, APT, vol de données personnelles",
+    "plus de 100 M€",
+    "obligations CNIL/RGPD, procès, image"
+   ],
+   "indice": "Le vol de données personnelles ajoute des obligations légales.",
+   "type": "application",
+   "difficulte": 3,
+   "id": "q28"
+  }
+ ]
+}
