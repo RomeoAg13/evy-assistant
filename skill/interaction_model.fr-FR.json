@@ -1,0 +1,62 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "evy",
+      "intents": [
+        { "name": "AMAZON.CancelIntent", "samples": [] },
+        { "name": "AMAZON.HelpIntent", "samples": [] },
+        { "name": "AMAZON.StopIntent", "samples": [] },
+        { "name": "AMAZON.NavigateHomeIntent", "samples": [] },
+        { "name": "AMAZON.FallbackIntent", "samples": [] },
+        {
+          "name": "QuestionIntent",
+          "slots": [{ "name": "query", "type": "AMAZON.SearchQuery" }],
+          "samples": [
+            "explique-moi {query}",
+            "explique {query}",
+            "dis-moi {query}",
+            "c'est quoi {query}",
+            "qu'est-ce que {query}",
+            "comment {query}",
+            "pourquoi {query}",
+            "est-ce que {query}",
+            "j'ai une question {query}",
+            "je veux savoir {query}",
+            "aide-moi à {query}",
+            "raconte-moi {query}"
+          ]
+        },
+        {
+          "name": "VisualIntent",
+          "slots": [{ "name": "query", "type": "AMAZON.SearchQuery" }],
+          "samples": [
+            "montre-moi {query}",
+            "montre {query}",
+            "dessine-moi {query}",
+            "dessine {query}",
+            "affiche {query}",
+            "affiche-moi {query}",
+            "visualise {query}",
+            "fais-moi un schéma de {query}",
+            "fais-moi un schéma sur {query}",
+            "fais-moi un dessin de {query}",
+            "schématise {query}",
+            "de me montrer {query}",
+            "de me dessiner {query}"
+          ]
+        },
+        {
+          "name": "TvOffIntent",
+          "slots": [],
+          "samples": [
+            "éteins la télé",
+            "éteins l'écran",
+            "coupe la télé",
+            "ferme l'écran"
+          ]
+        }
+      ],
+      "types": []
+    }
+  }
+}

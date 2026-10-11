@@ -1,0 +1,10 @@
+# ~/.cloudflared/config.yml
+# Seule la route /alexa est exposée sur Internet. Tout le reste (écran, historique) reste local.
+tunnel: evy
+credentials-file: /home/pi/.cloudflared/<ID-DU-TUNNEL>.json
+
+ingress:
+  - hostname: evy.<ton-domaine>
+    path: ^/alexa$
+    service: http://localhost:5000
+  - service: http_status:404

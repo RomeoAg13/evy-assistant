@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Evy</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --bg: #07090d;
+    --ink: #e8edf5;
+    --muted: #7b8698;
+    --accent: #4fd1c5;
+    --accent-2: #7c9cff;
+    --danger: #ff7a7a;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    background: var(--bg); color: var(--ink);
+    font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+    cursor: none;
+  }
+  .screen {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2.5vh; text-align: center; padding: 6vw;
+    opacity: 0; transition: opacity .6s ease;
+    pointer-events: none;
+  }
+  .screen.on { opacity: 1; }
+
+  /* Veille */
+  #idle { background: radial-gradient(ellipse at 50% 120%, #0f1c2a 0%, var(--bg) 60%); }
+  #clock { font-size: 15vh; font-weight: 200; letter-spacing: .02em; font-variant-numeric: tabular-nums; }
+  #date { font-size: 3.4vh; color: var(--muted); text-transform: capitalize; }
+  .hint { position: absolute; bottom: 7vh; font-size: 2.6vh; color: var(--muted); }
+  .hint b { color: var(--accent); font-weight: 500; }
+
+  /* Chargement */
+  .orb {
+    width: 18vh; height: 18vh; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, var(--accent), var(--accent-2) 60%, transparent 72%);
+    filter: blur(1px);
+    animation: breathe 2.4s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%, 100% { transform: scale(.85); opacity: .65; box-shadow: 0 0 6vh 1vh rgba(79,209,197,.15); }
+    50%      { transform: scale(1.05); opacity: 1;   box-shadow: 0 0 12vh 3vh rgba(124,156,255,.25); }
+  }
+  .label { font-size: 2.4vh; letter-spacing: .3em; text-transform: uppercase; color: var(--accent); }
+  .title { font-size: 5vh; font-weight: 500; max-width: 70vw; line-height: 1.25; }
+  #error .label { color: var(--danger); }
+  #error .msg { font-size: 2.4vh; color: var(--muted); max-width: 60vw; }
+
+  /* Visuel */
+  #visual { padding: 0; background: #000; }
+  #frame {
+    width: 1920px; height: 1080px; border: 0;
+    transform-origin: center center;
+    background: var(--bg);
+  }
+  #caption {
+    position: fixed; left: 3vw; bottom: 4vh;
+    padding: 1.2vh 2vw; border-radius: 1vh;
+    background: rgba(7,9,13,.78); backdrop-filter: blur(6px);
+    font-size: 2.2vh; color: var(--ink);
+    border-left: 3px solid var(--accent);
+    opacity: 0; transition: opacity .8s ease;
+  }
+  #caption.on { opacity: 1; }
+  #offline {
+    position: fixed; top: 2vh; right: 2vw; font-size: 1.8vh; color: var(--danger);
+    display: none;
+  }
+</style>
+</head>
+<body>
+  <section id="idle" class="screen on">
+    <div id="clock">--:--</div>
+    <div id="date"></div>
+    <div class="hint">Dis <b>« Alexa, demande à Evy de me montrer… »</b></div>
+  </section>
+
+  <section id="loading" class="screen">
+    <div class="orb"></div>
+    <div class="label">Evy prépare le visuel</div>
+    <div class="title" id="loading-title"></div>
+  </section>
+
+  <section id="error" class="screen">
+    <div class="label">Le visuel n'a pas pu être généré</div>
+    <div class="title" id="error-title"></div>
+    <div class="msg" id="error-msg"></div>
+  </section>
+
+  <section id="visual" class="screen">
+    <iframe id="frame" sandbox="allow-scripts" title="Visuel"></iframe>
+  </section>
+  <div id="caption"></div>
+  <div id="offline">Connexion à Evy perdue…</div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const screens = ["idle", "loading", "error", "visual"];
+  let idleTimer = null;
+  const IDLE_AFTER_MS = 30 * 60 * 1000; // retour à l'horloge après 30 min
+
+  function show(name) {
+    screens.forEach((s) => $(s).classList.toggle("on", s === name));
+    clearTimeout(idleTimer);
+    if (name !== "idle") idleTimer = setTimeout(() => show("idle"), IDLE_AFTER_MS);
+  }
+
+  function fit() {
+    const s = Math.min(innerWidth / 1920, innerHeight / 1080);
+    $("frame").style.transform = `scale(${s})`;
+  }
+  addEventListener("resize", fit);
+  fit();
+
+  function tick() {
+    const d = new Date();
+    $("clock").textContent = d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+    $("date").textContent = d.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+  }
+  setInterval(tick, 1000);
+  tick();
+
+  let shownId = null;
+  function handle(msg) {
+    if (msg.type === "loading") {
+      $("loading-title").textContent = msg.title;
+      show("loading");
+    } else if (msg.type === "visual") {
+      if (msg.id === shownId && $("visual").classList.contains("on")) return;
+      shownId = msg.id;
+      $("frame").src = `/visual/${msg.id}`;
+      show("visual");
+      const c = $("caption");
+      c.textContent = msg.title;
+      c.classList.add("on");
+      setTimeout(() => c.classList.remove("on"), 8000);
+    } else if (msg.type === "error") {
+      $("error-title").textContent = msg.title;
+      $("error-msg").textContent = msg.message || "";
+      show("error");
+      setTimeout(() => show("idle"), 20000);
+    }
+  }
+
+  function connect() {
+    const es = new EventSource("/events");
+    es.onopen = () => ($("offline").style.display = "none");
+    es.onmessage = (e) => { try { handle(JSON.parse(e.data)); } catch (_) {} };
+    es.onerror = () => ($("offline").style.display = "block"); // EventSource se reconnecte seul
+  }
+  connect();
+</script>
+</body>
+</html>

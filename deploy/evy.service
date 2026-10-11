@@ -1,0 +1,18 @@
+# Copie : sudo cp deploy/evy.service /etc/systemd/system/
+# Remplace "pi" par ton nom d'utilisateur si besoin.
+[Unit]
+Description=Evy (skill Alexa + écran télé)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=pi
+WorkingDirectory=/home/pi/evy
+ExecStart=/home/pi/evy/.venv/bin/python server.py
+Restart=always
+RestartSec=3
+# Accès à /dev/cec0
+SupplementaryGroups=video
+
+[Install]
+WantedBy=multi-user.target
